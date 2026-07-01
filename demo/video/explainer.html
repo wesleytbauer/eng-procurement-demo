@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>eng-procurement — animated walkthrough</title>
+<style>
+  /* Self-contained: system fonts only, no external assets (records cleanly offline). */
+  :root {
+    --bg: #0b1020; --panel: #121a33; --ink: #e8edff; --dim: #8b97c4;
+    --line: #243056; --teal: #36e0b0; --gold: #ffcf5c; --red: #ff6b6b; --blue: #6aa8ff;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  .stage {
+    width: 1920px; height: 1080px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(54,224,176,.10), transparent 60%),
+      radial-gradient(1000px 700px at -5% 110%, rgba(106,168,255,.10), transparent 60%),
+      var(--bg);
+    color: var(--ink); font-family: var(--sans); font-size: 28px; line-height: 1.35;
+  }
+  .scene {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 110px 140px; gap: 26px;
+    opacity: 0; transform: translateY(18px) scale(.995);
+    transition: opacity .55s ease, transform .55s ease; pointer-events: none;
+  }
+  .scene.active { opacity: 1; transform: none; }
+  .kicker { color: var(--teal); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 22px; }
+  h1 { font-size: 78px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; }
+  h2 { font-size: 56px; line-height: 1.08; font-weight: 800; letter-spacing: -.01em; }
+  .sub { color: var(--dim); font-size: 32px; max-width: 1300px; }
+  .mono { font-family: var(--mono); }
+  .pill { display: inline-block; padding: 6px 16px; border: 1px solid var(--line); border-radius: 999px; color: var(--dim); font-size: 24px; }
+
+  /* staggered reveal for children marked .r */
+  .scene.active .r { animation: rise .6s both; animation-delay: calc(var(--d, 0) * 1ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* pipeline */
+  .pipe { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 20px; }
+  .node { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 26px 30px; min-width: 230px; }
+  .node .t { font-weight: 700; font-size: 30px; }
+  .node .d { color: var(--dim); font-size: 22px; margin-top: 6px; }
+  .arrow { color: var(--teal); font-size: 44px; }
+  .loop { margin-top: 18px; color: var(--blue); font-size: 26px; }
+
+  /* generic two-column */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 34px 38px; }
+  .card h3 { font-size: 30px; margin-bottom: 14px; }
+  .muted { color: var(--dim); }
+
+  /* identity chips */
+  .chips { display: flex; gap: 18px; flex-wrap: wrap; }
+  .chip { background: #1b1230; border: 1px solid #3a2a5c; color: #d7c8ff; border-radius: 14px; padding: 16px 22px; font-family: var(--mono); font-size: 26px; }
+  .one { background: rgba(54,224,176,.12); border: 1px solid var(--teal); color: var(--teal); border-radius: 16px; padding: 22px 30px; font-weight: 800; font-size: 34px; display: inline-flex; gap: 14px; align-items: center; }
+
+  /* scorecard table */
+  table { width: 100%; border-collapse: collapse; font-size: 27px; }
+  th, td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 600; font-size: 22px; text-transform: uppercase; letter-spacing: .06em; }
+  td.num { font-family: var(--mono); text-align: right; }
+  tr.win { background: linear-gradient(90deg, rgba(255,207,92,.16), transparent); }
+  tr.win td { color: var(--gold); font-weight: 800; }
+  .crown { opacity: 0; transition: opacity .5s ease .2s; }
+  .scene.active .crown.show { opacity: 1; }
+
+  /* lifecycle bar */
+  .track { height: 26px; background: #0e1730; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; margin-top: 16px; }
+  .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), var(--blue)); transition: width 5.2s linear; }
+  .scene.active .fill.go { width: 100%; }
+  .flags { display: flex; gap: 16px; margin-top: 26px; flex-wrap: wrap; }
+  .flag { border-radius: 14px; padding: 16px 22px; font-size: 26px; border: 1px solid var(--line); background: var(--panel); }
+  .flag.bad { border-color: #5c2a2a; color: var(--red); background: rgba(255,107,107,.08); }
+  .flag.ok { border-color: #2a5c4a; color: var(--teal); background: rgba(54,224,176,.08); }
+
+  /* the break scene */
+  .grid7 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 40px; margin-top: 10px; }
+  .entry { display: flex; align-items: center; gap: 16px; font-family: var(--mono); font-size: 27px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); transition: all .5s ease; }
+  .entry .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--teal); transition: background .5s ease; }
+  .entry.flip { border-color: #5c2a2a; background: rgba(255,107,107,.10); color: var(--red); text-decoration: line-through; }
+  .entry.flip .dot { background: var(--red); }
+  .tally { display: flex; gap: 28px; margin-top: 30px; flex-wrap: wrap; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px 34px; min-width: 250px; opacity: 0; transform: translateY(10px); transition: all .5s ease; }
+  .stat.show { opacity: 1; transform: none; }
+  .stat .n { font-size: 64px; font-weight: 800; }
+  .stat.red .n { color: var(--red); } .stat.gold .n { color: var(--gold); } .stat.blue .n { color: var(--blue); }
+  .stat .l { color: var(--dim); font-size: 24px; margin-top: 4px; }
+  .reaward { margin-top: 26px; font-size: 30px; }
+  .reaward .tag { font-family: var(--mono); }
+  .ok { color: var(--teal); } .danger { color: var(--red); } .gld { color: var(--gold); }
+
+  /* closing */
+  .bignum { display: flex; gap: 48px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .bignum div { font-size: 34px; }
+  .bignum b { display: block; font-size: 72px; font-weight: 800; }
+  .repo { font-family: var(--mono); color: var(--teal); font-size: 30px; }
+
+  .footer { position: absolute; left: 140px; bottom: 56px; color: var(--dim); font-size: 22px; }
+  .badge { position: absolute; right: 140px; bottom: 56px; color: var(--dim); font-size: 22px; }
+  .progress { position: absolute; left: 0; bottom: 0; height: 6px; background: var(--teal); width: 0; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1. Title -->
+  <section class="scene" data-dur="4200">
+    <div class="kicker r">Engineering → Procurement, end to end</div>
+    <h1 class="r" style="--d:200">A product's rules, wired straight<br/>into who you buy from.</h1>
+    <div class="sub r" style="--d:500">A live, deterministic system. Every number you're about to see is real
+    program output — generated by <span class="mono">npm&nbsp;run&nbsp;demo</span>, not slideware.</div>
+  </section>
+
+  <!-- 2. Problem -->
+  <section class="scene" data-dur="6000">
+    <div class="kicker r">The problem</div>
+    <h2 class="r" style="--d:150">Engineering and procurement are two<br/>spreadsheets that never talk.</h2>
+    <div class="sub r" style="--d:500">Change one engineering requirement, and someone has to manually hunt down
+    which parts are now non-compliant, which suppliers are off the table, and which open POs just broke.
+    That translation is slow, error-prone, and where margin leaks.</div>
+  </section>
+
+  <!-- 3. The idea -->
+  <section class="scene" data-dur="7600">
+    <div class="kicker r">The one idea</div>
+    <h2 class="r" style="--d:120">Separate what never changes from<br/>what's free to vary.</h2>
+    <div class="cols" style="margin-top:18px">
+      <div class="card r" style="--d:400"><h3 class="ok">Invariants — the law</h3>
+        <div class="muted">A motor must be DC. A housing must meet an ingress-protection floor.
+        These are non-negotiable.</div></div>
+      <div class="card r" style="--d:650"><h3 class="blue" style="color:var(--blue)">Variables — the freedom</h3>
+        <div class="muted">Voltage, frame size, gear ratio. Free to range across an allowed set.</div></div>
+    </div>
+    <div class="sub r" style="--d:900">Name those two things, and a <b>standard</b> falls out automatically —
+    derived, not hand-typed. Everything downstream keys off it.</div>
+  </section>
+
+  <!-- 4. Pipeline -->
+  <section class="scene" data-dur="8400">
+    <div class="kicker r">The pipeline</div>
+    <h2 class="r" style="--d:100">One derived standard drives the whole chain.</h2>
+    <div class="pipe">
+      <div class="node r" style="--d:300"><div class="t">Product line</div><div class="d">invariants + variables</div></div>
+      <div class="arrow r" style="--d:450">→</div>
+      <div class="node r" style="--d:600"><div class="t">Standard</div><div class="d">derived · the gate</div></div>
+      <div class="arrow r" style="--d:750">→</div>
+      <div class="node r" style="--d:900"><div class="t">Vendor catalog</div><div class="d">conformant + sourced</div></div>
+      <div class="arrow r" style="--d:1050">→</div>
+      <div class="node r" style="--d:1200"><div class="t">Procure-to-pay</div><div class="d">PO · receipt · pay</div></div>
+    </div>
+    <div class="loop r" style="--d:1500">↻ Delivery performance flows back and changes the next award. The loop closes.</div>
+    <div class="sub r" style="--d:1700">Example world: a 7-part sealed DC gearmotor — <b>120 units</b>, one quarter,
+    <b>12 suppliers</b>.</div>
+  </section>
+
+  <!-- 5. Identity -->
+  <section class="scene" data-dur="7000">
+    <div class="kicker r">Supplier truth</div>
+    <h2 class="r" style="--d:100">One company, three names → one identity.</h2>
+    <div class="chips" style="margin-top:8px">
+      <div class="chip r" style="--d:350">Acme Steel Inc · 11-1111111</div>
+      <div class="chip r" style="--d:500">ACME STEEL · 111111111</div>
+      <div class="chip r" style="--d:650">Acme Steel Incorporated · <span class="danger">no tax id</span></div>
+    </div>
+    <div class="r" style="--d:1000; margin-top:10px"><span class="one">↳ resolves to ONE supplier ✓</span></div>
+    <div class="sub r" style="--d:1300">Swap in a different backing database (external system-of-record) →
+    <b>identical</b> result. The contract doesn't care where the data lives.</div>
+  </section>
+
+  <!-- 6. Award scorecard -->
+  <section class="scene" id="award" data-dur="9800">
+    <div class="kicker r">Who wins each PO — and why</div>
+    <h2 class="r" style="--d:80">Every award is a transparent scorecard.</h2>
+    <div class="card r" style="--d:300; padding:24px 30px">
+      <div class="muted" style="margin-bottom:10px">motor · order 120 · weights price .40 / lead .25 / risk .15 / performance .20</div>
+      <table>
+        <thead><tr><th>rank</th><th>supplier</th><th>entry</th><th class="num">price</th><th class="num">lead</th><th class="num">perf</th><th class="num">score</th><th>outcome</th></tr></thead>
+        <tbody>
+          <tr class="win"><td>1</td><td>Soylent Drives</td><td class="mono">m-soylent-54</td><td class="num">$37</td><td class="num">14d</td><td class="num">0.80</td><td class="num">0.95</td><td><span class="crown">🏆 AWARD</span></td></tr>
+          <tr><td>2</td><td>Acme Steel</td><td class="mono">m-acme-12</td><td class="num">$39.50</td><td class="num">21d</td><td class="num">0.90</td><td class="num">0.67</td><td class="muted">eligible</td></tr>
+          <tr><td>3</td><td>Acme Steel</td><td class="mono">m-acme-24</td><td class="num">$42</td><td class="num">21d</td><td class="num">0.90</td><td class="num">0.47</td><td class="muted">eligible</td></tr>
+          <tr><td>4</td><td>Globex Plastics</td><td class="mono">m-globex-24</td><td class="num">$40</td><td class="num">35d</td><td class="num">0.50</td><td class="num">0.16</td><td class="muted">eligible</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub r" style="--d:700"><b>Soylent</b> wins motor — cheapest and fastest. A non-conformant quote can
+    <i>never</i> win, no matter the price. (Remember Soylent — it matters in a second.)</div>
+  </section>
+
+  <!-- 7. The quarter runs -->
+  <section class="scene" id="run" data-dur="8200">
+    <div class="kicker r">The quarter runs</div>
+    <h2 class="r" style="--d:80">Demand → PO → receipt → 3-way match → pay.</h2>
+    <div class="sub r" style="--d:250" style="margin-top:6px">Reversibility built in: orders are staged <i>and approved</i> before they fire.</div>
+    <div class="track"><div class="fill" id="lifefill"></div></div>
+    <div class="flags">
+      <div class="flag bad r" style="--d:600">⚑ lead-time slip caught &amp; broadcast</div>
+      <div class="flag bad r" style="--d:800">⚑ mismatched invoice → flagged, never paid</div>
+      <div class="flag ok r" style="--d:1000">↻ closed loop: gearbox award flips
+        <span class="mono">globex → tyrell</span> once performance counts</div>
+    </div>
+  </section>
+
+  <!-- 8. THE MOMENT -->
+  <section class="scene" id="break" data-dur="12500">
+    <div class="kicker r">Engineering changes the standard</div>
+    <h2 class="r" style="--d:60">Two edits. Watch exactly what breaks.</h2>
+    <div class="sub r" style="--d:200">Raise the ingress floor <span class="mono">IP54 → IP65</span>,
+    and drop the <span class="mono">12V</span> option. The system names the damage — instantly, exactly.</div>
+    <div class="grid7" id="entries">
+      <div class="entry" data-flip="1"><span class="dot"></span> motor · m-soylent-54 <span class="muted">(IP54 + 12V)</span></div>
+      <div class="entry" data-flip="1"><span class="dot"></span> motor · m-acme-12 <span class="muted">(12V)</span></div>
+      <div class="entry" data-flip="1"><span class="dot"></span> controller · c-soylent-12 <span class="muted">(12V)</span></div>
+      <div class="entry" data-flip="1"><span class="dot"></span> controller · c-acme-12 <span class="muted">(12V)</span></div>
+      <div class="entry" data-flip="1"><span class="dot"></span> housing · h-acme-54 <span class="muted">(IP54)</span></div>
+      <div class="entry" data-flip="1"><span class="dot"></span> housing · h-hooli-54 <span class="muted">(IP54)</span></div>
+    </div>
+    <div class="tally" id="tally">
+      <div class="stat red"><div class="n">6</div><div class="l">entries now non-conformant</div></div>
+      <div class="stat gold"><div class="n">1</div><div class="l">new sourcing gap — controller</div></div>
+      <div class="stat blue"><div class="n">2</div><div class="l">in-flight POs at risk</div></div>
+    </div>
+    <div class="reaward" id="reaward" style="opacity:0; transition:opacity .6s ease">
+      Auto re-award: motor <span class="tag ok">→ Acme</span> · controller <span class="tag danger">→ GAP, re-source</span> ·
+      housing <span class="tag ok">→ Acme</span>.
+      &nbsp;<b class="gld">The cheapest, fastest motor supplier of the quarter was exactly the part the change eliminated.</b>
+    </div>
+  </section>
+
+  <!-- 9. Closing -->
+  <section class="scene" data-dur="6500">
+    <div class="kicker r">Computed, not estimated</div>
+    <div class="bignum">
+      <div class="r" style="--d:200"><b class="ok" style="color:var(--teal)">5/5</b> gates green</div>
+      <div class="r" style="--d:350"><b style="color:var(--red)">6</b> invalid</div>
+      <div class="r" style="--d:500"><b style="color:var(--gold)">1</b> gap</div>
+      <div class="r" style="--d:650"><b style="color:var(--blue)">2</b> POs at risk</div>
+    </div>
+    <div class="sub r" style="--d:850">Offline. Deterministic. Dependency-free.
+    <span class="mono">npm run demo</span> regenerates every table and this whole story.</div>
+    <div class="r repo" style="--d:1100">github.com/wesleytbauer/personal-claude-os-v2 · eng-procurement</div>
+  </section>
+
+  <div class="footer">eng-procurement · synthetic GM-Series · Q3-2026 · 120 units</div>
+  <div class="badge">numbers are live program output</div>
+  <div class="progress" id="prog"></div>
+</div>
+
+<script>
+  const scenes = Array.from(document.querySelectorAll('.scene'));
+  const prog = document.getElementById('prog');
+  const total = scenes.reduce((s, el) => s + Number(el.dataset.dur), 0);
+  let elapsed = 0;
+
+  // Per-scene timed sub-beats (the two big reveals).
+  const hooks = {
+    award(el) {
+      setTimeout(() => el.querySelector('.crown')?.classList.add('show'), 2600);
+    },
+    run(el) {
+      setTimeout(() => document.getElementById('lifefill').classList.add('go'), 500);
+    },
+    break(el) {
+      const entries = Array.from(el.querySelectorAll('.entry[data-flip]'));
+      entries.forEach((e, i) => setTimeout(() => e.classList.add('flip'), 2600 + i * 480));
+      const stats = Array.from(el.querySelectorAll('.stat'));
+      stats.forEach((s, i) => setTimeout(() => s.classList.add('show'), 6200 + i * 700));
+      setTimeout(() => { document.getElementById('reaward').style.opacity = '1'; }, 9000);
+    },
+  };
+
+  function run(i) {
+    if (i >= scenes.length) { window.__DONE__ = true; prog.style.width = '100%'; return; }
+    const el = scenes[i];
+    el.classList.add('active');
+    if (el.id && hooks[el.id]) hooks[el.id](el);
+    const dur = Number(el.dataset.dur);
+    // advance progress bar smoothly across this scene
+    const start = elapsed;
+    const t0 = performance.now();
+    function tick(now) {
+      const p = Math.min(1, (now - t0) / dur);
+      prog.style.width = ((start + p * dur) / total * 100).toFixed(2) + '%';
+      if (p < 1 && el.classList.contains('active')) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    setTimeout(() => {
+      el.classList.remove('active');
+      elapsed += dur;
+      setTimeout(() => run(i + 1), 560); // gap for cross-fade
+    }, dur);
+  }
+  // expose total so the recorder can size its wait
+  window.__TOTAL_MS__ = total + scenes.length * 560 + 800;
+
+  // Still mode for verification screenshots: #still=<index> freezes one scene in end-state.
+  function freeze(i) {
+    const el = scenes[i]; if (!el) return;
+    el.classList.add('active');
+    el.querySelectorAll('.r').forEach(r => { r.style.animation = 'none'; r.style.opacity = 1; r.style.transform = 'none'; });
+    el.querySelector('.crown')?.classList.add('show');
+    document.getElementById('lifefill')?.classList.add('go');
+    el.querySelectorAll('.entry[data-flip]').forEach(e => e.classList.add('flip'));
+    el.querySelectorAll('.stat').forEach(s => s.classList.add('show'));
+    const ra = document.getElementById('reaward'); if (ra) ra.style.opacity = '1';
+    window.__DONE__ = true;
+  }
+
+  // Manual mode (?manual=1): don't auto-run; the recorder calls window.__start()
+  // once it has installed Chromium's virtual clock, for deterministic frame capture.
+  window.__start = () => run(0);
+
+  window.addEventListener('load', () => {
+    const m = location.hash.match(/still=(\d+)/);
+    if (m) { freeze(Number(m[1])); return; }
+    if (/[?&]manual=1/.test(location.search)) return; // wait for __start()
+    setTimeout(() => run(0), 400);
+  });
+</script>
+</body>
+</html>

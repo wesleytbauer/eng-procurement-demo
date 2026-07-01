@@ -1,0 +1,126 @@
+{
+  "quarter": "Q3-2026",
+  "units": 120,
+  "coverageGreen": true,
+  "awardsV1": {
+    "motor": {
+      "entry": "m-soylent-54",
+      "supplier": "Soylent Drives LLC",
+      "score": 0.95
+    },
+    "gearbox": {
+      "entry": "g-tyrell-20",
+      "supplier": "Tyrell Gearworks",
+      "score": 0.6
+    },
+    "encoder": {
+      "entry": "e-umbrella-1000",
+      "supplier": "Umbrella Encoders GmbH",
+      "score": 0.85
+    },
+    "controller": {
+      "entry": "c-soylent-12",
+      "supplier": "Soylent Drives LLC",
+      "score": 0.8
+    },
+    "housing": {
+      "entry": "h-acme-65",
+      "supplier": "Acme Steel Inc",
+      "score": 1
+    },
+    "harness": {
+      "entry": "hn-stark-20",
+      "supplier": "Stark Harnessing Ltd",
+      "score": 1
+    },
+    "fasteners": {
+      "entry": "f-wayne-a2",
+      "supplier": "Wayne Fasteners Corp",
+      "score": 0.6
+    }
+  },
+  "closedLoop": {
+    "withPerf": "g-tyrell-20",
+    "withoutPerf": "g-globex-10",
+    "changed": true
+  },
+  "runs": {
+    "motor": {
+      "supplier": "Soylent Drives LLC",
+      "received": "120/120",
+      "state": "closed",
+      "paid": true
+    },
+    "gearbox": {
+      "supplier": "Tyrell Gearworks",
+      "received": "120/120",
+      "state": "closed",
+      "paid": true
+    },
+    "encoder": {
+      "supplier": "Umbrella Encoders GmbH",
+      "received": "120/120",
+      "state": "invoiced",
+      "paid": false
+    },
+    "controller": {
+      "supplier": "Soylent Drives LLC",
+      "received": "120/120",
+      "state": "closed",
+      "paid": true
+    },
+    "housing": {
+      "supplier": "Acme Steel Inc",
+      "received": "120/120",
+      "state": "closed",
+      "paid": true
+    },
+    "harness": {
+      "supplier": "Stark Harnessing Ltd",
+      "received": "115/120",
+      "state": "closed",
+      "paid": true
+    },
+    "fasteners": {
+      "supplier": "Wayne Fasteners Corp",
+      "received": "720/720",
+      "state": "closed",
+      "paid": true
+    }
+  },
+  "v2": {
+    "newlyInvalid": 6,
+    "newGaps": 1,
+    "posAtRisk": [
+      {
+        "slot": "motor",
+        "entryId": "m-soylent-54",
+        "supplier": "Soylent Drives LLC"
+      },
+      {
+        "slot": "controller",
+        "entryId": "c-soylent-12",
+        "supplier": "Soylent Drives LLC"
+      }
+    ],
+    "reawards": [
+      {
+        "slot": "motor",
+        "outcome": "re-awarded to m-acme-24 (Acme Steel Inc)",
+        "winnerEntryId": "m-acme-24",
+        "gap": false
+      },
+      {
+        "slot": "controller",
+        "outcome": "GAP — no eligible supplier, re-source required",
+        "gap": true
+      },
+      {
+        "slot": "housing",
+        "outcome": "re-awarded to h-acme-65 (Acme Steel Inc)",
+        "winnerEntryId": "h-acme-65",
+        "gap": false
+      }
+    ]
+  }
+}
