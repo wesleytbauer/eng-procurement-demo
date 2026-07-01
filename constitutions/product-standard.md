@@ -19,9 +19,13 @@ to the standard.
 - `STD-R-01` — **The standard is derived, never hand-authored.** It is a function
   of its inputs: `(invariants, variables) → standard`. A standard that exists
   independent of a stated invariant/variable set is rejected.
-- `STD-R-02` — **Invariants and variables are explicitly separated.** Every
-  element of the model is exactly one of the two. An element that is sometimes
-  fixed and sometimes free is mis-modeled and rejected until split.
+- `STD-R-02` — **Every element is exactly one cleanly-typed kind.** Each element
+  of the model is exactly one of **invariant**, **variable**, or **relationship**
+  (a conditional guard between attributes). No element is ambiguously typed: one
+  that is sometimes fixed and sometimes free is mis-modeled and rejected until
+  split; a guard smuggled into an invariant is likewise rejected. Relationships
+  are produced upstream by `SRC` (`SRC-R-05`) and are evaluated as part of the
+  standard's deterministic conformance decision (`STD-R-03`).
 - `STD-R-03` — **The standard is algorithmically defined.** Given a candidate
   component, the standard decides *conformant / non-conformant* deterministically
   — not by opinion. (This is what lets the catalog be gated, `CAT-R-03`.)
@@ -39,8 +43,8 @@ to the standard.
     classifies every one correctly (STD-R-03) — assertion.
   - Flipping one invariant flips the expected classifications, and the
     regenerated standard matches the new expectation (STD-R-01/-R-04), N≥2.
-  - Every model element is tagged invariant *or* variable, never both (STD-R-02)
-    — assertion.
+  - Every model element is tagged exactly one of invariant / variable /
+    relationship, never more than one (STD-R-02) — assertion.
 - **The bar** — classification is exact on the gold set; a single stale artifact
   after an input change is a failure. These are correctness invariants, not
   statistical targets.

@@ -33,11 +33,16 @@ complexity** — the difficulty a particular *solution* introduces.
 The synergy runs in one direction, and each arrow is a seam between domains:
 
 ```
-product line
-  → identify INVARIANTS          (what never changes in the line)
-  → identify VARIABLES           (what surrounds the invariants)
+design scope (customer/sales)
+  → applicable authoritative STANDARDS selected
+                                 (a function of the scope; the engineer confirms)
+  → faithful, traceable, RATIFIED codification
+                                 (LLM proposes → gate verifies → human ratifies)
+  → (INVARIANTS, VARIABLES, RELATIONSHIPS)
+                                 (the ratified inputs the standard derives from)
   → a STANDARD emerges           (algorithmically defined; changing an
-                                   invariant or variable changes the standard)
+                                   invariant, variable, or relationship changes
+                                   the standard)
   → the standard defines a curated VENDOR CATALOG
        (sections of supplier catalogs covering the standard's components)
   → PROCUREMENT OPERATIONS take over
@@ -52,7 +57,8 @@ is its own truth, source-of-record-agnostic.
 
 | Domain | Essential complexity owned | Prefix |
 |---|---|---|
-| **Product Standard** | Deriving a coherent, machine-checkable standard from a product line's invariants + variables; a change in either propagates to the standard. | `STD` |
+| **Standard Sourcing** | Turning the authoritative standards a design scope selects into faithful, traceable, human-ratified `(invariants, variables, relationships)` — the inputs `STD` consumes as given. | `SRC` |
+| **Product Standard** | Deriving a coherent, machine-checkable standard from a product line's invariants + variables + relationships; a change in any propagates to the standard. | `STD` |
 | **Vendor Catalog** | A curated catalog that covers exactly the standard's component space by selecting sections of supplier catalogs. | `CAT` |
 | **Supplier Truth** | A trustworthy, identity-resolved abstraction of suppliers — source-of-record-agnostic. Build-vs-integrate is a Boundary Eval variable, not a Spec line. | `SUP` |
 | **Procurement Operations** | The demand → PO → receipt → invoice → nonconformance lifecycle, with reversibility gating the irreversible acts (POs, payments). | `OPS` |

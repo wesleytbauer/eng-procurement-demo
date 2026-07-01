@@ -4,11 +4,17 @@ Phase tracker for this standalone doctrine layer.
 
 ## Where things stand
 
-- **Doctrine:** complete. Root framework + 4 domain constitutions, all thin
-  (Spec → Solution Eval → Boundary Eval), zero mechanism.
-- **Build:** all 4 domains implemented behind their invariants, each with its
-  Solution Eval as a runnable offline gate. `npm run verify` →
-  **ALL GATES PASS — 5/5 green** (4 domains + the end-to-end demo). `tsc --noEmit` clean.
+- **Doctrine:** complete. Root framework + 5 domain constitutions, all thin
+  (Spec → Solution Eval → Boundary Eval), zero mechanism. `SRC` (Standard
+  Sourcing) is the newest, the new head of the flow above `STD`.
+- **Build:** the four downstream domains (`STD`, `CAT`, `SUP`, `OPS`) are
+  implemented behind their invariants, each with its Solution Eval as a runnable
+  offline gate. `npm run verify` → **ALL GATES PASS — 5/5 green** (4 domains +
+  the end-to-end demo). `tsc --noEmit` clean. `SRC` is **doctrine-only for now**:
+  its Solution Eval bar is written (`scripts/sourcing.selftest.ts`), but the LLM
+  codifier that would satisfy it is **envisioned, not built** — a later
+  Boundary-Eval build. A concrete, hand-worked illustration of the `SRC` step on a
+  real public-domain standard lives in `docs/mil-std-810-codification.md`.
 - **Showcase demo:** `demo/` applies the whole framework to a synthetic 7-slot DC
   gearmotor (`cyberdyne-gm`), 120 units / quarter, 12 suppliers. `npm run demo`
   emits byte-stable artifacts to `demo/out/` + a generated `presentation/STORY.md`;
@@ -29,6 +35,7 @@ Phase tracker for this standalone doctrine layer.
 
 | Domain | Prefix | Status | Gate |
 |---|---|---|---|
+| Standard Sourcing | `SRC` | doctrine only — gate defined, codifier envisioned | `npm run sourcing:selftest` *(envisioned)* |
 | Product Standard | `STD` | built | `npm run standard:selftest` |
 | Vendor Catalog | `CAT` | built — **flagged** as possible seam, not yet proven a domain | `npm run catalog:selftest` |
 | Supplier Truth | `SUP` | built | `npm run supplier:selftest` |
