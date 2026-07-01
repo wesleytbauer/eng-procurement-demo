@@ -1,5 +1,19 @@
 # eng-procurement
 
+> This repo demonstrates how I codify the semantic reasoning of engineering
+> standards into deterministic, machine-checkable code, then build a parts catalog
+> of approved vendors whose components conform to those standards.
+>
+> It cuts both ways: it helps procurement maintain supplier relationships that
+> satisfy the constraints engineering imposes, and helps engineers design with
+> components that are both standard-conformant and sourceable from trusted
+> suppliers. Fed demand from the build plan, it recommends trusted suppliers to
+> meet it — it recommends; a human awards.
+>
+> The system relies on LLMs where the work needs flexibility (reading a standard's
+> intent and codifying it) and on deterministic code where it needs rigidity (the
+> conformance gate every part and supplier must pass).
+
 A standalone doctrine layer for **engineering–procurement synergy**: turning a
 product line's invariants and variables into an algorithmically-defined standard,
 a curated vendor catalog, a source-of-record-agnostic supplier abstraction, and a
