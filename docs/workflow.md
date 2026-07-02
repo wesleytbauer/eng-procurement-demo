@@ -32,7 +32,7 @@ flowchart TD
         G --> H --> I
     end
     SUP["Supplier Truth · SUP<br/>identity-resolved · source-of-record-agnostic<br/>SUP-R-01…05"]
-    DEM["Demand — INPUT from MRP / build plan<br/>(not forecast)"]
+    DEM["Demand — INPUT in ANY form (BOM / ERP / CSV / API)<br/>references a PCID → resolves the part's constraints<br/>(not forecast)"]
     ERP[("ERP — read-only daily export<br/>no write-back")]
     D -->|"ratified codified input"| E
     E -->|"defines component space + conformance gate"| F
@@ -99,9 +99,15 @@ feeds back so engineers design with parts that are both conformant *and* sourcea
 every supplier to one canonical identity, source-of-record-agnostic, **read-only**
 synced from a daily ERP export — no write-back, no risky integration (`SUP-R-01…05`).
 
-**7. Real demand arrives — from the build plan, not a forecast.** Demand comes **in**
-from the MRP / build plan; the system never forecasts it. Each line targets a
-cataloged, conformant item (`OPS-R-01`).
+**7. Real demand arrives — in any form, keyed by a PCID, not a forecast.** Demand
+comes **in** from the MRP / build plan; the system never forecasts it. Its *form*
+is accidental (BOM, ERP export, CSV, API) — what matters is that each line
+references a **Part Constraint ID (PCID)**: a stable identifier minted when
+engineering selected the part, binding it to its sourcing spec (the standard's
+constraints for it, at a scope version). A referenced PCID resolves automatically
+to those constraints — and is itself a signal that the part was selected through
+this tool, so its constraints are known and honored. A line with no resolvable
+PCID is a surfaced exception (`OPS-R-01`).
 
 **8. The system runs procure-to-pay and recommends — but a human awards.** **OPS**
 takes it demand → quotes → selection → PO → receipt → invoice → close, ranking a

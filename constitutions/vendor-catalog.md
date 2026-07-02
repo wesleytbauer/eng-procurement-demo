@@ -63,4 +63,6 @@ approved equivalents made explicit.
 - **→ Supplier Truth** — every entry's supplier resolves to a Supplier Truth
   identity (`CAT-R-02` ↔ `SUP-R-02`); the catalog never invents supplier identity.
 - **→ Procurement Operations** — the catalog is the demand→source space
-  (`OPS-R-01`).
+  (`OPS-R-01`); a demand line's **Part Constraint ID (PCID)** resolves through a
+  catalog entry to the standard component it satisfies, so procurement inherits
+  the part's constraints without re-keying (`OPS-R-01` ↔ `CAT-R-02`/`CAT-R-03`).

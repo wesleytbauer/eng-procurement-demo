@@ -19,7 +19,11 @@ Phase tracker for this standalone doctrine layer.
   verdict three-valued) and `SRC-R-07` (versioned immutable scope + replayable
   impact record). A concrete, hand-worked illustration of the `SRC` step on a real
   public-domain standard lives in `docs/mil-std-810-codification.md`, and the
-  end-to-end flow is drawn + narrated in `docs/workflow.md`.
+  end-to-end flow is drawn + narrated in `docs/workflow.md`. `OPS-R-01` now keys
+  demand on a **Part Constraint ID (PCID)** — a resolvable part identity minted at
+  selection that binds a part to its constraints (scope-version provenance) — so
+  demand can arrive in any form (BOM/ERP/CSV/API); the form is a Boundary-Eval
+  reuse call, carried as a referenced line, not yet its own domain (root §5).
 - **Showcase demo:** `demo/` applies the whole framework to a synthetic 7-slot DC
   gearmotor (`cyberdyne-gm`), 120 units / quarter, 12 suppliers. `npm run demo`
   emits byte-stable artifacts to `demo/out/` + a generated `presentation/STORY.md`;
