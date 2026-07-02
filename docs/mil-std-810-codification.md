@@ -185,9 +185,9 @@ The transition `v1 → v2` writes a **replayable impact record**:
   grades; a new salt-fog invariant appears.
 - **Downstream deltas:** catalog entries that were conformant under v1 may flip;
   new sourcing gaps surface; in-flight POs for now-non-conformant parts are flagged
-  at-risk — exactly the shape the demo already computes for its own change
-  (`demo/out/reconcile.md`: **6** newly non-conformant, **1** gap, **2** POs at
-  risk).
+  at-risk — exactly the shape the (now-retired) demo showed for its own change
+  (**6** newly non-conformant, **1** gap, **2** POs at risk); to be
+  re-demonstrated in the demo rebuild.
 
 Because every state is a deterministic function of `(scope version, ratified
 inputs)`, the history is **reproducible**: any past scope version can be

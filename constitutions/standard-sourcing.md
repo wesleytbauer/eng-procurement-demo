@@ -127,8 +127,9 @@ an LLM happens to emit.
   re-derives the standard (`STD-R-04`), which re-evaluates coverage (`CAT-R-05`)
   and flags in-flight buys (`OPS`). The ripple is the whole flow (root §2), not
   drift. `SRC-R-07`'s **impact record** is exactly this ripple captured per scope
-  transition — the demo already computes it in miniature for one v1→v2 change
-  (`demo/out/reconcile.md`: 6 newly non-conformant, 1 gap, 2 POs at risk).
+  transition — the (now-retired) demo showed it in miniature for one v1→v2 change
+  (6 newly non-conformant, 1 gap, 2 POs at risk); re-demonstrating it is part of
+  the demo rebuild.
 - **Cross-cutting (flagged, not built)** — *lineage / versioning* now recurs in
   `SRC-R-07`, `STD-R-04`, and `CAT-R-05`. Per root §4, a cross-cutting concern
   graduates to a shared Foundation kernel only once its referenced lines stop
