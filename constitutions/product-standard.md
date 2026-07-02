@@ -27,8 +27,13 @@ to the standard.
   are produced upstream by `SRC` (`SRC-R-05`) and are evaluated as part of the
   standard's deterministic conformance decision (`STD-R-03`).
 - `STD-R-03` — **The standard is algorithmically defined.** Given a candidate
-  component, the standard decides *conformant / non-conformant* deterministically
-  — not by opinion. (This is what lets the catalog be gated, `CAT-R-03`.)
+  component, the standard decides deterministically — not by opinion. The verdict
+  is **three-valued**, following the obligation level `SRC-R-06` assigns each
+  element: *conformant* (all mandatory elements met, no unmet recommendation),
+  *conformant-with-recorded-deviation* (a **recommended** element is unmet but a
+  ratified waiver is on record), or *non-conformant* (a **mandatory** element is
+  unmet — no waiver possible). Informative elements never affect the verdict.
+  (This is what lets the catalog be gated, `CAT-R-03`.)
 - `STD-R-04` — **Change propagation is total.** Editing an invariant or a
   variable regenerates the standard; no stale standard survives a change to its
   inputs. The lineage from inputs → standard is recorded (provenance).

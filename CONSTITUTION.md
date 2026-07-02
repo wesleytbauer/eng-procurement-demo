@@ -33,11 +33,14 @@ complexity** — the difficulty a particular *solution* introduces.
 The synergy runs in one direction, and each arrow is a seam between domains:
 
 ```
-design scope (customer/sales)
+design scope (customer/sales) — VERSIONED, immutable; each change records a
+                                 replayable impact record (SRC-R-07)
   → applicable authoritative STANDARDS selected
                                  (a function of the scope; the engineer confirms)
   → faithful, traceable, RATIFIED codification
-                                 (LLM proposes → gate verifies → human ratifies)
+                                 (LLM proposes → gate verifies → human ratifies;
+                                  each element cited AND typed by obligation level
+                                  shall/should/may/informative — SRC-R-06)
   → (INVARIANTS, VARIABLES, RELATIONSHIPS)
                                  (the ratified inputs the standard derives from)
   → a STANDARD emerges           (algorithmically defined; changing an

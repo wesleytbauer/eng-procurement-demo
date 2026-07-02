@@ -128,6 +128,78 @@ machine got the standard right on its own.
 
 ---
 
+## Normative strength — telling *shall* from *should* (`SRC-R-06`)
+
+A standard's language is not uniformly binding. MIL-STD-810 is explicitly a
+**tailored** standard — it prescribes *methods*, not universal pass/fail — so
+faithful codification must carry each element's **obligation level**, cited to the
+source word, and enforce accordingly. We reuse the established RFC 2119 / ISO-IEC
+modal vocabulary rather than invent one:
+
+| Source language | Strength | Codified as | The gate does… | Waivable? |
+|---|---|---|---|---|
+| shall / must / required | **mandatory** | invariant / hard guard | hard-reject on violation | **No** |
+| should / recommended | **recommended** | advisory | passes, emits a **deviation** | **Yes** — only via a recorded, ratified waiver |
+| may / optional / can | **permissive** | variable | no enforcement; declares the choice | it *is* a free choice |
+| typically / generally / note | **informative** | annotation | never gates | context only |
+
+Re-reading the proposed block through this lens:
+
+```ts
+{ key: "humidity_category_declared", strength: "mandatory",   // once in scope, non-negotiable
+  src: "507.6 — a category must be selected" },
+{ key: "test_condition = 60C_95RH_aggravated", strength: "recommended",  // historical default…
+  src: "507.6 — 60°C/95%RH historically used; standard notes it does NOT occur in nature",
+  waiver: /* engineer tailors to the real ~40 °C duty; reason recorded + ratified */ },
+{ key: "humidity_category", strength: "permissive",           // free design choice
+  domain: ["B1_constant_high","B2_variable_high","B3_hot_humid","none"] },
+{ key: "aggravated forces faster results", strength: "informative",  // guidance, never gates
+  src: "507.6 Procedure II annex — informative" },
+```
+
+The `60 °C / 95 %` line is the whole point: the standard itself flags it as *not
+naturally occurring* — a textbook **should**. The system surfaces it as a strong
+recommendation the engineer can tailor away **with a recorded reason**, not a hard
+rule and not a silent omission. This makes `STD`'s conformance verdict
+three-valued (`STD-R-03`): *conformant* / *conformant-with-recorded-deviation* /
+*non-conformant*. Strength is never silently promoted or demoted — pinned to the
+source clause, an unfaithful change of level is caught by the gold set (`SRC-R-04`).
+
+## Scope history & impact — because scope is fluid (`SRC-R-07`)
+
+Design scope changes often in this industry, so scope is a **versioned, immutable**
+entity at the head of the flow, and every downstream artifact is stamped with the
+scope version it derives from. Suppose sales revises this job:
+
+```
+scope v1: washdown food-processing conveyor drive; ~40 °C continuous
+scope v2: …customer adds "outdoor, coastal installation"      (who / when / why recorded)
+```
+
+The transition `v1 → v2` writes a **replayable impact record**:
+
+- **Standards added:** Method 509 (Salt Fog) is now scope-mandated, not merely an
+  inference — the `SRC-R-06` obligation on the corrosion relationship rises from a
+  scope-inferred *recommendation* to a *mandatory* guard.
+- **Codified elements changed:** `material` domain narrows to corrosion-resistant
+  grades; a new salt-fog invariant appears.
+- **Downstream deltas:** catalog entries that were conformant under v1 may flip;
+  new sourcing gaps surface; in-flight POs for now-non-conformant parts are flagged
+  at-risk — exactly the shape the demo already computes for its own change
+  (`demo/out/reconcile.md`: **6** newly non-conformant, **1** gap, **2** POs at
+  risk).
+
+Because every state is a deterministic function of `(scope version, ratified
+inputs)`, the history is **reproducible**: any past scope version can be
+re-derived, and any two versions diffed — you can ask *"what did v1 require?"*,
+*"what did the coastal change break?"*, or *"which scope version was this PO valid
+under?"* and get an exact answer. History is append-only and read-only-synced;
+the impact record **informs** — a human still decides what to do about an at-risk
+PO (recommends, never awards), and it reports the *realized* impact of an actual
+change, never a forecast.
+
+---
+
 ## Sources
 
 - MIL-STD-810H, Method 507.6 (Humidity) — full method text (PDF):

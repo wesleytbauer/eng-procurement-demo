@@ -13,8 +13,13 @@ Phase tracker for this standalone doctrine layer.
   the end-to-end demo). `tsc --noEmit` clean. `SRC` is **doctrine-only for now**:
   its Solution Eval bar is written (`scripts/sourcing.selftest.ts`), but the LLM
   codifier that would satisfy it is **envisioned, not built** — a later
-  Boundary-Eval build. A concrete, hand-worked illustration of the `SRC` step on a
-  real public-domain standard lives in `docs/mil-std-810-codification.md`.
+  Boundary-Eval build. `SRC` carries seven invariants: `SRC-R-01..05` (scope→set,
+  provenance, ratification, two-way faithfulness, first-class relationships) plus
+  `SRC-R-06` (obligation level — shall/should/may/informative, making `STD`'s
+  verdict three-valued) and `SRC-R-07` (versioned immutable scope + replayable
+  impact record). A concrete, hand-worked illustration of the `SRC` step on a real
+  public-domain standard lives in `docs/mil-std-810-codification.md`, and the
+  end-to-end flow is drawn + narrated in `docs/workflow.md`.
 - **Showcase demo:** `demo/` applies the whole framework to a synthetic 7-slot DC
   gearmotor (`cyberdyne-gm`), 120 units / quarter, 12 suppliers. `npm run demo`
   emits byte-stable artifacts to `demo/out/` + a generated `presentation/STORY.md`;
