@@ -48,6 +48,10 @@ design scope (customer/sales) — VERSIONED, immutable; each change records a
                                    the standard)
   → the standard defines a curated VENDOR CATALOG
        (sections of supplier catalogs covering the standard's components)
+  → the engineer APPROVES recommended, conformant parts → mint a PCID per part
+       (binds part ↔ constraint FINGERPRINT ↔ scope version; constraint sets are
+        content-addressed and deduped by fingerprint; a PCID is minted only at
+        approval, so IDs don't proliferate — PID-R-01..04)
   → PROCUREMENT OPERATIONS (advisory) take over
        (demand — ANY form, referencing a PCID that resolves to the part's
         constraints; ingest the system-of-record's reports read-only — POs,
@@ -66,6 +70,7 @@ is its own truth, source-of-record-agnostic.
 | **Standard Sourcing** | Turning the authoritative standards a design scope selects into faithful, traceable, human-ratified `(invariants, variables, relationships)` — the inputs `STD` consumes as given. | `SRC` |
 | **Product Standard** | Deriving a coherent, machine-checkable standard from a product line's invariants + variables + relationships; a change in any propagates to the standard. | `STD` |
 | **Vendor Catalog** | A curated catalog that covers exactly the standard's component space by selecting sections of supplier catalogs. | `CAT` |
+| **Part Identity** | Minting, at an engineer's approval, a unique immutable Part Constraint ID (PCID) that binds a selected part to the exact constraints (by fingerprint) and scope version it was approved against, and resolves them deterministically. Newly carved (root §5). | `PID` |
 | **Supplier Truth** | A trustworthy, identity-resolved abstraction of suppliers — source-of-record-agnostic. Build-vs-integrate is a Boundary Eval variable, not a Spec line. | `SUP` |
 | **Procurement Operations** | An advisory layer over a read-only mirror of the procure-to-pay lifecycle: reconciles POs/receipts/invoices ingested from the system of record and recommends actions. Recommends, never acts; mirrors, never masters — never the source of truth. | `OPS` |
 
