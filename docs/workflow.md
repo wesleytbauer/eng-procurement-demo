@@ -26,20 +26,22 @@ flowchart TD
     end
     subgraph OPS["Procurement Operations · OPS"]
         direction TB
-        G["Procure-to-pay lifecycle<br/>quotes → selection → PO → receipt → invoice<br/>OPS-R-01…07 · irreversible acts staged &amp; gated"]
-        H(["System recommends / ranks"])
-        I{{"Human awards &amp; decides"}}
+        G["Advisory over a READ-ONLY mirror of the ERP<br/>ingest POs/receipts/invoices → reconcile → OPS-R-01…07<br/>recommends, never acts · mirrors, never masters"]
+        H(["System recommends / ranks<br/>expedites · invoice holds · outreach · performance"])
+        I{{"Human acts &amp; the ERP records<br/>(awards, issues POs, pays)"}}
         G --> H --> I
     end
     SUP["Supplier Truth · SUP<br/>identity-resolved · source-of-record-agnostic<br/>SUP-R-01…05"]
     DEM["Demand — INPUT in ANY form (BOM / ERP / CSV / API)<br/>references a PCID → resolves the part's constraints<br/>(not forecast)"]
-    ERP[("ERP — read-only daily export<br/>no write-back")]
+    ERP[("System of record / ERP — SOURCE OF TRUTH<br/>issues POs · receives invoices · pays<br/>read-only export, no write-back")]
     D -->|"ratified codified input"| E
     E -->|"defines component space + conformance gate"| F
     F -->|"demand targets cataloged, conformant items"| G
     SUP -.->|"identity"| F
     SUP -.->|"identity + performance"| G
     ERP -.->|"read-only sync"| SUP
+    ERP -.->|"read-only P2P reports (POs, receipts, invoices)"| G
+    I -.->|"human records the act in the ERP"| ERP
     DEM --> G
     F -.->|"cuts both ways — sourceable, conformant parts inform design"| B
     RIP["Scope change → replayable IMPACT RECORD (SRC-R-07)<br/>re-derive SRC → STD → CAT → OPS<br/>added/dropped standards · flipped parts · new gaps · POs at risk<br/>(a feature, not drift)"]
@@ -109,12 +111,18 @@ to those constraints — and is itself a signal that the part was selected throu
 this tool, so its constraints are known and honored. A line with no resolvable
 PCID is a surfaced exception (`OPS-R-01`).
 
-**8. The system runs procure-to-pay and recommends — but a human awards.** **OPS**
-takes it demand → quotes → selection → PO → receipt → invoice → close, ranking a
-best conformant option with a reproducible scorecard. It **recommends**; a **human
-awards and decides**. Irreversible acts (PO, payment) are staged and gated, with a
-three-way match before payment; supplier performance attaches back to identity in
-SUP (`OPS-R-02…07`).
+**8. The system advises over a read-only mirror — it recommends, it never acts.**
+**OPS** does **not** run procure-to-pay; the company's existing system of record
+does that. Instead OPS **ingests the ERP's reports read-only** (POs issued, goods
+received, invoices) and mirrors that state — it never mints, advances, or writes
+it back (`OPS-R-02`). Off that mirror it **recommends**: the rank-1 conformant
+supplier with a reproducible scorecard, which invoices to hold (three-way-match
+mismatches), which suppliers to expedite or chase for an updated delivery date,
+what a scope change put at risk. **A human takes the action and the ERP records
+it** — awarding, issuing the PO, paying (`OPS-R-03/-R-04`). Supplier performance is
+*computed* from the mirror and attached to identity in SUP, feeding the next
+recommendation (`OPS-R-07`). Because the tool performs no irreversible act, there
+is nothing to stage or gate — reversibility is upheld by abstention.
 
 **9. When anything upstream changes, it ripples — and the impact is recorded.**
 A scope change (or a re-ratified rule) flows **SRC → STD → CAT → OPS**, and the
@@ -129,6 +137,12 @@ not merely logged.
 **The one-sentence version:** a customer's *versioned* scope picks the standards →
 a human ratifies the machine's *cited, strength-typed* codification of them → that
 becomes a deterministic, three-valued conformance gate → procurement builds a
-catalog that passes it → real demand flows through a procure-to-pay loop where the
-system recommends and a **human awards** — and any upstream change ripples cleanly,
-leaving a replayable record of exactly what it broke.
+catalog that passes it → real demand (keyed by PCID) flows in, and over a
+**read-only mirror of the ERP** the system **recommends** while a **human acts and
+the ERP records** — and any upstream change ripples cleanly, leaving a replayable
+record of exactly what it broke.
+
+> **The boundary, stated plainly:** this tool is advisory. It **recommends, never
+> acts; mirrors, never masters; and is never the source of truth.** Issuing POs,
+> receiving invoices, and paying live in the company's existing system of record;
+> the tool ingests those read-only and helps procurement decide what to do next.

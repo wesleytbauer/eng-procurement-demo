@@ -48,10 +48,12 @@ design scope (customer/sales) — VERSIONED, immutable; each change records a
                                    the standard)
   → the standard defines a curated VENDOR CATALOG
        (sections of supplier catalogs covering the standard's components)
-  → PROCUREMENT OPERATIONS take over
+  → PROCUREMENT OPERATIONS (advisory) take over
        (demand — ANY form, referencing a PCID that resolves to the part's
-        constraints → quotes/lead-time/risk → selection → PO → dissemination →
-        receipt → invoice approval → nonconformance/shortage → performance)
+        constraints; ingest the system-of-record's reports read-only — POs,
+        receipts, invoices → reconcile → RECOMMEND actions: selection, expedites,
+        invoice holds, supplier outreach, performance. Recommends only; the
+        system of record executes and remains the source of truth.)
 ```
 
 Supplier identity underlies the last two stages but is **not** part of them: it
@@ -65,18 +67,22 @@ is its own truth, source-of-record-agnostic.
 | **Product Standard** | Deriving a coherent, machine-checkable standard from a product line's invariants + variables + relationships; a change in any propagates to the standard. | `STD` |
 | **Vendor Catalog** | A curated catalog that covers exactly the standard's component space by selecting sections of supplier catalogs. | `CAT` |
 | **Supplier Truth** | A trustworthy, identity-resolved abstraction of suppliers — source-of-record-agnostic. Build-vs-integrate is a Boundary Eval variable, not a Spec line. | `SUP` |
-| **Procurement Operations** | The demand → PO → receipt → invoice → nonconformance lifecycle, with reversibility gating the irreversible acts (POs, payments). | `OPS` |
+| **Procurement Operations** | An advisory layer over a read-only mirror of the procure-to-pay lifecycle: reconciles POs/receipts/invoices ingested from the system of record and recommends actions. Recommends, never acts; mirrors, never masters — never the source of truth. | `OPS` |
 
 Domains are flat and independent. A domain owns exactly one essential
 complexity. Nothing is owned twice; nothing is unowned.
 
 ## 4. Cross-cutting concerns (flagged, not yet a domain)
 
-Integrity (single source of truth per fact), **provenance** (every fact traces
-to its origin), and **reversibility** (irreversible external acts are staged and
-gated) recur in every domain. For now they are carried as **referenced invariant
-lines inside the domains that need them** (notably `OPS-R-03` for the
-PO/payment gate and the `*-provenance` lines in `STD`, `CAT`, `SUP`).
+Integrity (single source of truth per fact) and **provenance** (every fact traces
+to its origin) recur in every domain, carried as **referenced invariant lines**
+(the `*-provenance` lines in `SRC`, `STD`, `CAT`, `SUP`). **Reversibility** used
+to be a third such concern, seeded by a PO/payment staging gate in `OPS` — but
+`OPS` is now an *advisory* layer that performs no irreversible external act
+(`OPS-R-03`). The tool reversibility concern is therefore discharged by
+*abstention*: there is nothing to stage or gate because the tool never acts.
+Reversibility of the actual POs and payments lives entirely with the external
+system of record, outside this layer.
 
 They **graduate to a shared Foundation kernel only when proven hard** — when the
 referenced lines stop being thin and start being copied. Flagged now, not built
