@@ -42,6 +42,30 @@ consumes as given.
   material ∈ corrosion-resistant`) is codified as a distinct `relationship`, never
   smuggled into an invariant or a variable. It is the third element type `STD`
   now admits (`STD-R-02`), produced here.
+- `SRC-R-06` — **Obligation level is a first-class, cited property.** Every
+  codified element records its normative strength — **mandatory** (shall/must),
+  **recommended** (should), **permissive** (may/optional), or **informative**
+  (typically/generally/note) — traced to the source language it came from
+  (reusing the RFC 2119 / ISO-IEC-Directives modal vocabulary, not a private one).
+  Enforcement follows from strength: mandatory elements gate as hard invariants;
+  recommended elements are surfaced as advisories and may be set aside **only** by
+  a recorded, justified, human-ratified **deviation**; informative text never
+  gates. Strength is never silently promoted (guidance hardened into a shall) nor
+  demoted (a shall softened to slip a part through) — a change of level is itself
+  a ratified act with a cited reason. This is the typed form of the "normative vs
+  informative" ratification frontier, and it makes `STD`'s conformance verdict
+  three-valued (`STD-R-03`).
+- `SRC-R-07` — **Scope is versioned and immutable; derivation is traceable to a
+  scope version.** Every scope revision is recorded with provenance (who, when,
+  why) and never overwritten — history is append-only. Every downstream artifact
+  is stamped with the scope version it derives from, so anything derived from a
+  superseded scope is detectable as **stale** (the `STD-R-04` fingerprint chain,
+  rooted at a scope version). Each scope transition records a **replayable impact
+  record**: standards added/dropped, codified elements changed (with their
+  obligation level, `SRC-R-06`), and the downstream conformance / coverage / PO
+  deltas the change induces. Because every state is a deterministic function of
+  `(scope version, ratified inputs)`, any past state is re-derivable and any two
+  versions are diffable — history is *reproducible*, not merely logged.
 
 ## Solution Eval — how we verify the invariants hold
 
@@ -61,6 +85,17 @@ an LLM happens to emit.
   - **Ratification gate.** No element is presented as an `STD` input while still in
     the *proposed* state; only ratified elements cross the seam (SRC-R-03) —
     assertion.
+  - **Obligation level.** Every codified element carries a strength drawn from the
+    fixed set {mandatory, recommended, permissive, informative}, cited to source;
+    a recommended element that is unmet yields a *deviation requiring a ratified
+    waiver*, never a silent pass or a hard fail; informative text gates nothing
+    (SRC-R-06) — assertion, plus a gold-set check that source modal words map to
+    the expected strength.
+  - **Scope lineage & impact.** Scope history is append-only (no in-place edit);
+    every artifact resolves to exactly one scope version; a simulated scope
+    transition produces an impact record whose deltas equal the expected set, and
+    re-deriving from an earlier scope version reproduces that version's state
+    byte-for-byte (SRC-R-07) — assertion, N≥2.
 - **The bar** — gold-set reproduction, provenance, and the ratification gate are
   100% assertions (correctness invariants, not statistical targets); the
   ripple diff must be exact — no missed re-derivation, no spurious element.
@@ -75,7 +110,7 @@ an LLM happens to emit.
 | Accidental complexity | Decision | Why |
 |---|---|---|
 | The authoritative standards themselves (MIL-STD, IEC, ISO, …) | **Reuse — never rebuild** | They are the external authority; the domain reads them, it does not author them. |
-| Scope / standard-set storage | **Reuse** | Generic versioned store; the derivation and the provenance are the value, not the bytes. |
+| Scope / standard-set storage **and version history** | **Reuse** | A git-like log, an event store, or a temporal DB all satisfy `SRC-R-07`; the invariant is immutability + traceability + replayable impact, not the bytes. The derivation and the provenance are the value. |
 | The LLM codifier (prose → proposed elements) | **Build-vs-reuse variable (accidental)** | *How* prose is turned into proposals is mechanism — which model, which prompt, build vs. an off-the-shelf extractor is a recorded Boundary Eval call, **not** a Spec line. This mirrors how `SUP` treats build-vs-integrate the system of record: the variability is isolated below the invariants, which only require that whatever proposes is verified and ratified before it binds (SRC-R-03). |
 | The deterministic verify gate | **Build** (minimal) | Core to `SRC-R-03`; it is what makes an LLM proposal trustworthy enough to hand a human. |
 
@@ -91,4 +126,11 @@ an LLM happens to emit.
   re-derive the applicable standards and codification here (`SRC-R-01`), which
   re-derives the standard (`STD-R-04`), which re-evaluates coverage (`CAT-R-05`)
   and flags in-flight buys (`OPS`). The ripple is the whole flow (root §2), not
-  drift.
+  drift. `SRC-R-07`'s **impact record** is exactly this ripple captured per scope
+  transition — the demo already computes it in miniature for one v1→v2 change
+  (`demo/out/reconcile.md`: 6 newly non-conformant, 1 gap, 2 POs at risk).
+- **Cross-cutting (flagged, not built)** — *lineage / versioning* now recurs in
+  `SRC-R-07`, `STD-R-04`, and `CAT-R-05`. Per root §4, a cross-cutting concern
+  graduates to a shared Foundation kernel only once its referenced lines stop
+  being thin and start being copied. Scope versioning is the strongest evidence
+  yet for a **lineage kernel** — flagged here, earned later, not built now.
