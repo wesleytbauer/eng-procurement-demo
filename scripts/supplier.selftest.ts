@@ -39,6 +39,7 @@ export function selftest(): number {
     { canonicalName: "Acme Steel Inc", taxIds: ["11-1111111"], attributes: { duns: sourced("00-111-0000", "dnb-feed", "asserted"), tier: sourced(1, "owner", "authoritative") } },
     { canonicalName: "Globex Plastics LLC", taxIds: ["22-2222222"], attributes: { duns: sourced("00-222-0000", "dnb-feed", "asserted") } },
     { canonicalName: "Initech Co", taxIds: ["33-3333333"] },
+    { canonicalName: "Umbrella Corporation", taxIds: ["44-4444444"] },
   ]);
 
   // SUP-R-02: variants of the same supplier collapse to one identity...
@@ -47,6 +48,16 @@ export function selftest(): number {
   // ...and distinct suppliers never collapse.
   const allIds = new Set([...acmeRefs, ...globexRefs, ...initechRefs].map((r) => local.resolve(r)));
   c.ok("SUP-R-02 three distinct suppliers stay three identities", allIds.size === 3, `got ${allIds.size}`);
+  // SUP-R-02: collapse that hinges SPECIFICALLY on tax-id normalization — two refs
+  // sharing only a differently-formatted tax id, whose names do NOT normalize alike,
+  // so the name path cannot mask broken tax matching.
+  const umbrellaRefs: SupplierRef[] = [
+    { name: "Umbrella Corporation", taxId: "44-4444444", feed: "ariba" },
+    { name: "Umbrella Corp Global Holdings", taxId: "444444444", feed: "edi" },
+  ];
+  const umbrellaIds = new Set(umbrellaRefs.map((r) => local.resolve(r)));
+  c.ok("SUP-R-02 differently-formatted tax id unifies non-matching names (tax normalization)",
+    umbrellaIds.size === 1, [...umbrellaIds].join(" | "));
 
   // SUP-R-03: every attribute carries provenance; an unsourced attribute is rejected
   // at construction time.
