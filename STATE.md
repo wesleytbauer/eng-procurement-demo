@@ -8,28 +8,28 @@ Phase tracker for this standalone doctrine layer.
   (Spec → Solution Eval → Boundary Eval), zero mechanism. `SRC` (Standard
   Sourcing) is the head of the flow above `STD`; `PID` (Part Identity) is the
   newest, carved at the engineering-selection seam (root §5 watch flag).
-- **Build:** three domains (`STD`, `CAT`, `SUP`) are implemented behind their
-  invariants, each with its Solution Eval as a runnable offline gate.
-  `npm run verify` → **ALL GATES PASS — 3/3 green**. `tsc --noEmit` clean. The
-  `OPS` implementation + gate and the end-to-end demo were **retired** (see
-  `retired/` and below) when `OPS` was reframed to an advisory layer; they will be
-  rebuilt to the new spec. `SRC` is **doctrine-only for now**:
-  its Solution Eval bar is written (`scripts/sourcing.selftest.ts`), but the LLM
-  codifier that would satisfy it is **envisioned, not built** — a later
-  Boundary-Eval build. `SRC` carries seven invariants: `SRC-R-01..05` (scope→set,
+- **Build:** all six domains have a runnable, offline Solution-Eval gate.
+  `npm run verify` → **ALL GATES PASS — 6/6 green**. `tsc --noEmit` clean.
+  `SRC`, `PID`, and the advisory `OPS` are now implemented (`lib/sourcing.ts`,
+  `lib/part-identity.ts`, `lib/operations.ts`) alongside `STD`/`CAT`/`SUP`. One
+  honest caveat: `SRC`'s gate verifies the *deterministic* half of its trust model
+  (provenance, faithfulness, typing, obligation, ratification, scope→set); the LLM
+  **codifier** that produces proposals is still **envisioned, not built** — a
+  Boundary-Eval build. The end-to-end *showcase demo* remains **retired** (see
+  `retired/`), to be rebuilt from a proof that the domains work. `SRC` carries seven invariants: `SRC-R-01..05` (scope→set,
   provenance, ratification, two-way faithfulness, first-class relationships) plus
   `SRC-R-06` (obligation level — shall/should/may/informative, making `STD`'s
   verdict three-valued) and `SRC-R-07` (versioned immutable scope + replayable
   impact record). A concrete, hand-worked illustration of the `SRC` step on a real
   public-domain standard lives in `docs/mil-std-810-codification.md`, and the
   end-to-end flow is drawn + narrated in `docs/workflow.md`. Demand is keyed on a
-  **Part Constraint ID (PCID)**, now owned by its own thin domain **`PID` (Part
-  Identity)** — doctrine-only, four invariants (`PID-R-01..04`): minted at the
+  **Part Constraint ID (PCID)**, owned by its own thin domain **`PID` (Part
+  Identity)** — **built**, four invariants (`PID-R-01..04`): minted at the
   engineer's approval, unique/immutable, binds part ↔ constraint **fingerprint** ↔
   scope version, and equality decided by fingerprint (never similarity — no vector
-  search). Its gate `scripts/selection.selftest.ts` is envisioned; the design note
-  is `docs/pcid-minting.md`. `OPS-R-01` consumes/resolves a PCID, so demand can
-  arrive in any form (BOM/ERP/CSV/API) — the form is a Boundary-Eval reuse call.
+  search). Gate `scripts/selection.selftest.ts`; design note `docs/pcid-minting.md`.
+  `OPS-R-01` consumes/resolves a PCID, so demand can arrive in any form
+  (BOM/ERP/CSV/API) — the form is a Boundary-Eval reuse call.
 - **Showcase demo:** **retired, pending a deliberate rebuild.** The original
   synthetic GM-Series demo + presentation (and the executing-`OPS` code it leaned
   on) were built for an earlier doctrine — before `SRC`, and while `OPS` still
@@ -51,14 +51,14 @@ Phase tracker for this standalone doctrine layer.
 
 | Domain | Prefix | Status | Gate |
 |---|---|---|---|
-| Standard Sourcing | `SRC` | doctrine only — gate defined, codifier envisioned | `npm run sourcing:selftest` *(envisioned)* |
+| Standard Sourcing | `SRC` | gate **built**; LLM codifier envisioned | `npm run sourcing:selftest` |
 | Product Standard | `STD` | built | `npm run standard:selftest` |
 | Vendor Catalog | `CAT` | built — **flagged** as possible seam, not yet proven a domain | `npm run catalog:selftest` |
-| Part Identity | `PID` | doctrine only — newly carved (root §5); gate + minting envisioned | `npm run selection:selftest` *(envisioned)* |
+| Part Identity | `PID` | **built** — newly carved (root §5) | `npm run selection:selftest` |
 | Supplier Truth | `SUP` | built | `npm run supplier:selftest` |
-| Procurement Operations | `OPS` | doctrine reframed to *advisory*; impl + gate **retired**, to be rebuilt | *(retired — see `retired/`)* |
+| Procurement Operations | `OPS` | **built** (advisory: recommend-only, mirror, no write-back) | `npm run operations:selftest` |
 
-The three built domains, plus typecheck, run from `npm run verify` (3/3).
+All six domain gates, plus typecheck, run from `npm run verify` (6/6).
 
 ## Open decisions (by evidence, not now)
 

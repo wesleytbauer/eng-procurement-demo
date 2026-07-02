@@ -101,9 +101,12 @@ an LLM happens to emit.
   ripple diff must be exact — no missed re-derivation, no spurious element.
 - **How it's checked** — a gold-set reproduction assertion + a scope-change ripple
   test + a provenance-and-ratification assertion over the proposed set.
-- **Gate** — `scripts/sourcing.selftest.ts` (`npm run sourcing:selftest`). The
-  gate defines the bar now; the codifier that satisfies it is a later **build**
-  (see Boundary Eval) — the eval exists first, on purpose.
+- **Gate** — `scripts/sourcing.selftest.ts` (`npm run sourcing:selftest`) —
+  **built and green.** It verifies the deterministic half of the trust model
+  (provenance, faithfulness, clean typing, obligation classification, ratification
+  gate, scope→set derivation) over a *proposed* codification. The LLM **codifier**
+  that produces proposals is still a Boundary-Eval **build, envisioned** — the gate
+  exists first, on purpose, so a proposal can be verified before a human ratifies.
 
 ## Boundary Eval — accidental complexity a solution induces
 

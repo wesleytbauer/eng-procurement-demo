@@ -68,9 +68,9 @@ Defined *before* building, so the bar cannot drift to match what gets built.
 - **How it's checked** — a mint-on-approval assertion, a uniqueness/immutability
   assertion over minted history, a resolve-round-trip assertion, and a
   fingerprint-determinism assertion.
-- **Gate** — `scripts/selection.selftest.ts` (`npm run selection:selftest`). The
-  gate defines the bar now; the minting/binding implementation is a later
-  **build** — the eval exists first, on purpose (as with `SRC`).
+- **Gate** — `scripts/selection.selftest.ts` (`npm run selection:selftest`) —
+  **built and green.** The minting/binding/resolution + fingerprint are
+  implemented in `lib/part-identity.ts` and asserted against all four invariants.
 
 ## Boundary Eval — accidental complexity a solution induces
 
