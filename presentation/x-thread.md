@@ -42,17 +42,20 @@ They resolve to ONE identity. Swap in a different system-of-record → identical
 [attach: suppliers.md]
 
 **6/**
-Every PO award is a transparent scorecard, not a gut call.
+Every award *recommendation* is a transparent scorecard, not a gut call.
 
-Price / lead time / risk / past performance, weighted, normalized, ranked — with the reasons shown. Ineligible quotes still appear, with WHY.
+Price / lead time / risk / past performance, weighted, normalized, ranked — with the reasons shown. Ineligible quotes still appear, with WHY. The tool recommends; a human awards.
 [attach: motor scorecard from scorecards.md]
 
 **7/**
-The buy then runs the full lifecycle with reversibility built in:
+The tool doesn't run the buy — it mirrors it. It ingests the ERP's reports
+read-only and recommends over that mirror:
 
-demand → PO (staged + approved, never auto-fired) → receipt → 3-way match → payment.
+demand → PO → receipt → 3-way match → invoice → close.
 
-A mismatched invoice? Flagged, never paid. The stager is never the executor.
+A mismatched invoice? It recommends a HOLD, with the discrepancy shown. The tool
+recommends; a human acts and the ERP records it. It never writes back, and it's
+never the source of truth.
 [attach: lifecycle diagram from diagrams.md]
 
 **8/**

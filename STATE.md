@@ -32,6 +32,12 @@ Phase tracker for this standalone doctrine layer.
   payment, and the v1→v2 change is exactly 6 invalid / 1 gap / 2 POs at risk).
   The award scorer is demo-layer mechanism (candidate, unratified `OPS` invariant).
   Ready-to-post LinkedIn + X copy in `presentation/`.
+  **Note (doctrine ahead of demo):** `OPS` doctrine was reframed to an *advisory*
+  layer — it recommends over a read-only mirror of the system of record and never
+  performs POs/payments (`OPS-R-02/-R-03`). The showcase demo still *simulates* the
+  full ecosystem including the system-of-record's acts (it carries an advisory
+  disclaimer in `STORY.md`); re-skinning the demo's lifecycle so those transitions
+  read explicitly as *observed-from-the-SoR* is a follow-up, not yet done.
 - **Standalone:** own nested git repo, own `package.json`/`tsconfig`, deps are
   dev-only (`tsx`, `typescript`, `@types/node`) — no runtime dependency on the
   parent `personal-claude-os-v2`. Parent `.gitignore` excludes this directory so
@@ -56,9 +62,12 @@ All four, plus typecheck, run from `npm run verify`.
 
 1. **Vendor Catalog: domain or seam?** Keeps its constitution; demotes to a
    referenced invariant line if it stays thin (root §5).
-2. **Foundation kernel?** Integrity / provenance / reversibility are carried as
-   referenced lines inside domains (notably `OPS-R-03`). Graduates to a shared
-   kernel only when those lines stop being thin (root §4).
+2. **Foundation kernel?** Integrity / provenance are carried as referenced lines
+   inside domains. Graduates to a shared kernel only when those lines stop being
+   thin (root §4). (Reversibility is no longer a candidate here: `OPS` is advisory
+   and takes no irreversible act — `OPS-R-03` — so there is nothing to gate; that
+   concern lives with the external system of record. *Lineage/versioning* is now
+   the strongest kernel candidate — `SRC-R-07`/`STD-R-04`/`CAT-R-05`.)
 3. **Substrate.** Unchosen. Supplier Truth's `SUP-R-01` is deliberately written
    so build-vs-integrate the system of record is a later Boundary Eval call.
 
@@ -71,7 +80,8 @@ each a deliberate Boundary Eval still owed:
    a rewrite.
 2. **Vendor Catalog: domain or seam?** Watch whether `catalog.ts` stays thin; if
    it does, demote to a referenced invariant line (root §5).
-3. **Foundation kernel?** `OPS-R-03`'s stager≠executor gate is the seed; promote
-   to a shared kernel only when a second domain needs the same primitive.
+3. **Foundation kernel?** Lineage/versioning (`SRC-R-07`, `STD-R-04`, `CAT-R-05`)
+   is the seed; promote to a shared kernel only when a second domain needs the
+   same primitive. (The former reversibility seed is retired — `OPS` is advisory.)
 4. **Split out** into its own repository when ready (it already has no parent
    dependency).

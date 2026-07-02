@@ -16,8 +16,16 @@
 
 A standalone doctrine layer for **engineering–procurement synergy**: turning a
 product line's invariants and variables into an algorithmically-defined standard,
-a curated vendor catalog, a source-of-record-agnostic supplier abstraction, and a
-governed procure-to-pay lifecycle.
+a curated vendor catalog, a source-of-record-agnostic supplier abstraction, and an
+**advisory** layer over the procure-to-pay lifecycle.
+
+> **What this tool does *not* do.** It is advisory: it **recommends, never acts;
+> mirrors, never masters; and is never the source of truth.** Issuing POs,
+> receiving invoices, and paying live in the company's existing system of record.
+> This tool ingests that system's reports **read-only** (no write-back) and helps
+> procurement decide what to do next — whom to expedite, which invoice to hold,
+> which supplier is late, what a scope change put at risk. A **human acts** and the
+> system of record records it.
 
 It is its own git repository, nested inside `personal-claude-os-v2` for now and
 **destined to split out**. It depends on nothing in the parent repo.
