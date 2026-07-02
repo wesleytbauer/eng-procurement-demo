@@ -4,9 +4,10 @@ Phase tracker for this standalone doctrine layer.
 
 ## Where things stand
 
-- **Doctrine:** complete. Root framework + 5 domain constitutions, all thin
+- **Doctrine:** complete. Root framework + 6 domain constitutions, all thin
   (Spec → Solution Eval → Boundary Eval), zero mechanism. `SRC` (Standard
-  Sourcing) is the newest, the new head of the flow above `STD`.
+  Sourcing) is the head of the flow above `STD`; `PID` (Part Identity) is the
+  newest, carved at the engineering-selection seam (root §5 watch flag).
 - **Build:** three domains (`STD`, `CAT`, `SUP`) are implemented behind their
   invariants, each with its Solution Eval as a runnable offline gate.
   `npm run verify` → **ALL GATES PASS — 3/3 green**. `tsc --noEmit` clean. The
@@ -21,11 +22,14 @@ Phase tracker for this standalone doctrine layer.
   verdict three-valued) and `SRC-R-07` (versioned immutable scope + replayable
   impact record). A concrete, hand-worked illustration of the `SRC` step on a real
   public-domain standard lives in `docs/mil-std-810-codification.md`, and the
-  end-to-end flow is drawn + narrated in `docs/workflow.md`. `OPS-R-01` now keys
-  demand on a **Part Constraint ID (PCID)** — a resolvable part identity minted at
-  selection that binds a part to its constraints (scope-version provenance) — so
-  demand can arrive in any form (BOM/ERP/CSV/API); the form is a Boundary-Eval
-  reuse call, carried as a referenced line, not yet its own domain (root §5).
+  end-to-end flow is drawn + narrated in `docs/workflow.md`. Demand is keyed on a
+  **Part Constraint ID (PCID)**, now owned by its own thin domain **`PID` (Part
+  Identity)** — doctrine-only, four invariants (`PID-R-01..04`): minted at the
+  engineer's approval, unique/immutable, binds part ↔ constraint **fingerprint** ↔
+  scope version, and equality decided by fingerprint (never similarity — no vector
+  search). Its gate `scripts/selection.selftest.ts` is envisioned; the design note
+  is `docs/pcid-minting.md`. `OPS-R-01` consumes/resolves a PCID, so demand can
+  arrive in any form (BOM/ERP/CSV/API) — the form is a Boundary-Eval reuse call.
 - **Showcase demo:** **retired, pending a deliberate rebuild.** The original
   synthetic GM-Series demo + presentation (and the executing-`OPS` code it leaned
   on) were built for an earlier doctrine — before `SRC`, and while `OPS` still
@@ -50,6 +54,7 @@ Phase tracker for this standalone doctrine layer.
 | Standard Sourcing | `SRC` | doctrine only — gate defined, codifier envisioned | `npm run sourcing:selftest` *(envisioned)* |
 | Product Standard | `STD` | built | `npm run standard:selftest` |
 | Vendor Catalog | `CAT` | built — **flagged** as possible seam, not yet proven a domain | `npm run catalog:selftest` |
+| Part Identity | `PID` | doctrine only — newly carved (root §5); gate + minting envisioned | `npm run selection:selftest` *(envisioned)* |
 | Supplier Truth | `SUP` | built | `npm run supplier:selftest` |
 | Procurement Operations | `OPS` | doctrine reframed to *advisory*; impl + gate **retired**, to be rebuilt | *(retired — see `retired/`)* |
 

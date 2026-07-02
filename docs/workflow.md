@@ -2,7 +2,7 @@
 
 The engineering↔procurement flow this doctrine layer encodes, end to end. The
 diagram is the map; the narrative walks one job through it. Both track the
-constitutions (`SRC → STD → CAT → OPS`, with `SUP` underneath) and the honesty
+constitutions (`SRC → STD → CAT → PID → OPS`, with `SUP` underneath) and the honesty
 guardrails: **recommends, never awards**; demand is an **input, not a forecast**;
 the ERP is **read-only**; codification is a **human-ratified** frontier.
 
@@ -24,6 +24,9 @@ flowchart TD
     subgraph CAT["Vendor Catalog · CAT"]
         F["Curated catalog covering exactly the standard<br/>the standard is the gate · CAT-R-01…05"]
     end
+    subgraph PID["Part Identity · PID"]
+        P["Engineer APPROVES recommended parts → MINT PCID<br/>binds part ↔ constraint FINGERPRINT ↔ scope version<br/>minted only at approval · equality by fingerprint · PID-R-01…04"]
+    end
     subgraph OPS["Procurement Operations · OPS"]
         direction TB
         G["Advisory over a READ-ONLY mirror of the ERP<br/>ingest POs/receipts/invoices → reconcile → OPS-R-01…07<br/>recommends, never acts · mirrors, never masters"]
@@ -36,7 +39,8 @@ flowchart TD
     ERP[("System of record / ERP — SOURCE OF TRUTH<br/>issues POs · receives invoices · pays<br/>read-only export, no write-back")]
     D -->|"ratified codified input"| E
     E -->|"defines component space + conformance gate"| F
-    F -->|"demand targets cataloged, conformant items"| G
+    F -->|"recommends conformant, sourceable parts"| P
+    P -->|"PCID-keyed demand → resolves constraints"| G
     SUP -.->|"identity"| F
     SUP -.->|"identity + performance"| G
     ERP -.->|"read-only sync"| SUP
@@ -52,7 +56,7 @@ flowchart TD
     classDef human fill:#fef9c3,stroke:#a16207,color:#3f2d02;
     classDef ext fill:#f3f4f6,stroke:#6b7280,color:#111827;
     classDef note fill:#ffffff,stroke:#9ca3af,color:#374151,stroke-dasharray:4 3;
-    class A,B,C,D,E eng;
+    class A,B,C,D,E,P eng;
     class F,G,H proc;
     class I human;
     class SUP,DEM,ERP ext;
@@ -101,17 +105,26 @@ feeds back so engineers design with parts that are both conformant *and* sourcea
 every supplier to one canonical identity, source-of-record-agnostic, **read-only**
 synced from a daily ERP export — no write-back, no risky integration (`SUP-R-01…05`).
 
-**7. Real demand arrives — in any form, keyed by a PCID, not a forecast.** Demand
+**7. The engineer approves — and *that* mints the PCID.** Up to here, constraints
+have flowed as cheap, deduped **fingerprints** (a content hash of each slot's
+constraint set) and the system has *recommended* conformant, sourceable parts —
+but **nothing unique has been stamped**, so nothing proliferates. When the engineer
+decides the recommended list is good and **approves it** (records the parts into
+the drawing / BOM), **Part Identity (`PID`)** mints one **unique, immutable PCID**
+per part, binding it to the exact **constraint fingerprint** and **scope version**
+it was approved against (`PID-R-01…04`). Constraint equality is decided by
+fingerprint — exact, never fuzzy; no vector search anywhere. See
+[`pcid-minting.md`](./pcid-minting.md).
+
+**8. Real demand arrives — in any form, keyed by a PCID, not a forecast.** Demand
 comes **in** from the MRP / build plan; the system never forecasts it. Its *form*
 is accidental (BOM, ERP export, CSV, API) — what matters is that each line
-references a **Part Constraint ID (PCID)**: a stable identifier minted when
-engineering selected the part, binding it to its sourcing spec (the standard's
-constraints for it, at a scope version). A referenced PCID resolves automatically
-to those constraints — and is itself a signal that the part was selected through
-this tool, so its constraints are known and honored. A line with no resolvable
-PCID is a surfaced exception (`OPS-R-01`).
+references a **PCID**, which resolves automatically and deterministically to the
+part's constraints (`PID-R-03`). A referenced PCID is itself a signal that the part
+was selected through this tool, so its constraints are known and honored. A line
+with no resolvable PCID is a surfaced exception (`OPS-R-01`).
 
-**8. The system advises over a read-only mirror — it recommends, it never acts.**
+**9. The system advises over a read-only mirror — it recommends, it never acts.**
 **OPS** does **not** run procure-to-pay; the company's existing system of record
 does that. Instead OPS **ingests the ERP's reports read-only** (POs issued, goods
 received, invoices) and mirrors that state — it never mints, advances, or writes
@@ -124,7 +137,7 @@ it** — awarding, issuing the PO, paying (`OPS-R-03/-R-04`). Supplier performan
 recommendation (`OPS-R-07`). Because the tool performs no irreversible act, there
 is nothing to stage or gate — reversibility is upheld by abstention.
 
-**9. When anything upstream changes, it ripples — and the impact is recorded.**
+**10. When anything upstream changes, it ripples — and the impact is recorded.**
 A scope change (or a re-ratified rule) flows **SRC → STD → CAT → OPS**, and the
 transition writes a **replayable impact record** (`SRC-R-07`): standards
 added/dropped, elements changed (with obligation level), catalog entries flipped,

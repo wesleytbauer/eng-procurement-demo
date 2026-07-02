@@ -134,10 +134,11 @@ a second consumer needs the scorer — letting the invariant earn its place
   `CAT-R-01`); a demand line's **PCID** resolves through the catalog entry to the
   standard component it satisfies and thence to its constraints (`OPS-R-01` ↔
   `CAT-R-02`/`CAT-R-03`).
-- **→ Standard Sourcing / Product Standard** — the **PCID** binding is minted at
-  *selection* and carries scope-version provenance (`SRC-R-07`); it rides the
-  ripple — a scope change re-resolves the constraints a PCID points at and flags
-  any in-flight PO whose part is now non-conformant.
+- **→ Part Identity** — the **PCID** a demand line references is minted by `PID` at
+  the engineer's approval (`PID-R-01`) and resolves deterministically to the part's
+  constraints and scope version (`PID-R-03`); `OPS` consumes and resolves it, never
+  mints it. It rides the ripple — a scope change re-resolves the constraints a PCID
+  points at and flags any in-flight PO whose part is now non-conformant.
 - **→ Supplier Truth** — performance and observed risk attach by identity
   (`OPS-R-07` ↔ `SUP-R-04`); Operations never mints supplier identity.
 - **→ System of record (external)** — the tool ingests the ERP's procure-to-pay
