@@ -49,7 +49,8 @@ design scope (customer/sales) — VERSIONED, immutable; each change records a
   → the standard defines a curated VENDOR CATALOG
        (sections of supplier catalogs covering the standard's components)
   → PROCUREMENT OPERATIONS take over
-       (demand → quotes/lead-time/risk → selection → PO → dissemination →
+       (demand — ANY form, referencing a PCID that resolves to the part's
+        constraints → quotes/lead-time/risk → selection → PO → dissemination →
         receipt → invoice approval → nonconformance/shortage → performance)
 ```
 

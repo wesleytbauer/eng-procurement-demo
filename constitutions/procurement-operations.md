@@ -15,9 +15,20 @@ lifecycle state and reversibility gating the irreversible acts.
 
 ## Spec — invariants
 
-- `OPS-R-01` — **Demand sources from the catalog.** A procurement action targets
-  a cataloged, standard-conformant item. An off-catalog buy is a surfaced
-  exception, never a silent one (`CAT-R-01` upstream).
+- `OPS-R-01` — **Demand references a resolvable part identity; its form is
+  accidental.** A procurement action targets a cataloged, standard-conformant item
+  identified by a **Part Constraint ID (PCID)** — a stable identifier, minted when
+  engineering *selects* a conforming part, that binds the part to its **sourcing
+  spec**: the standard's codified constraints for it (invariants / variables /
+  relationships + obligation levels, `SRC-R-06`) at the scope version they were
+  derived from (`SRC-R-07`). Demand may arrive in **any form** (BOM, ERP export,
+  CSV, API); the form is a Boundary-Eval/reuse decision, never a Spec line.
+  Whatever the form, a referenced PCID resolves — automatically, without
+  re-keying — to the constraints the part must be sourced against. A referenced
+  PCID is itself a signal: **the part was selected through this tool, so its
+  constraints are known and honored.** A demand line with no resolvable PCID, or
+  an off-catalog buy, is a surfaced exception, never a silent one (`CAT-R-01`
+  upstream).
 - `OPS-R-02` — **Lifecycle state is single-truth and ordered.** Each line has one
   authoritative state advancing through defined transitions
   (demand → quoted → ordered → received → invoiced → closed); states are not
@@ -80,6 +91,7 @@ consumer needs the scorer — letting the invariant earn its place (root §4/§5
 
 | Accidental complexity | Decision | Why |
 |---|---|---|
+| Demand intake form / transport (BOM, ERP export, CSV, API) | **Outsource / reuse** | Commodity ingestion; the invariant is a *resolvable PCID* (`OPS-R-01`), not the carrier. Which form is a reuse call, never a Spec line. |
 | Quote / PO / invoice transport (EDI, email, supplier portals) | **Outsource** | Commodity integration; never differentiating. |
 | Lifecycle state machine + three-way match | **Build** | Core domain logic; correctness of the buy is the value. |
 | Staging / gate primitive for PO & payment | **Build** (minimal, one primitive) | Core to `OPS-R-03`; reused across every irreversible act rather than re-built per act. |
@@ -88,7 +100,13 @@ consumer needs the scorer — letting the invariant earn its place (root §4/§5
 ## Seams
 
 - **→ Vendor Catalog** — demand sources from the catalog (`OPS-R-01` ↔
-  `CAT-R-01`).
+  `CAT-R-01`); a demand line's **PCID** resolves through the catalog entry to the
+  standard component it satisfies and thence to its constraints (`OPS-R-01` ↔
+  `CAT-R-02`/`CAT-R-03`).
+- **→ Standard Sourcing / Product Standard** — the **PCID** binding is minted at
+  *selection* and carries scope-version provenance (`SRC-R-07`); it rides the
+  ripple — a scope change re-resolves the constraints a PCID points at and flags
+  any in-flight PO whose part is now non-conformant.
 - **→ Supplier Truth** — performance and observed risk attach by identity
   (`OPS-R-07` ↔ `SUP-R-04`); Operations never mints supplier identity.
 - **Cross-cutting** — `OPS-R-03` is the reversibility line that would seed a
