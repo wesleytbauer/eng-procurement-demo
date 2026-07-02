@@ -4,9 +4,12 @@
   "type": "module",
   "description": "Engineering-procurement synergy doctrine layer. Standalone: invariants + variables -> standard -> curated catalog -> supplier truth -> procure-to-pay. Self-contained, offline gates, no external deps.",
   "scripts": {
+    "sourcing:selftest": "tsx scripts/sourcing.selftest.ts",
     "standard:selftest": "tsx scripts/standard.selftest.ts",
     "catalog:selftest": "tsx scripts/catalog.selftest.ts",
+    "selection:selftest": "tsx scripts/selection.selftest.ts",
     "supplier:selftest": "tsx scripts/supplier.selftest.ts",
+    "operations:selftest": "tsx scripts/operations.selftest.ts",
     "verify": "tsx scripts/verify-all.ts",
     "typecheck": "tsc --noEmit"
   },

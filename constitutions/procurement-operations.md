@@ -86,11 +86,12 @@ in prose and *demonstrating* before carving it into the Spec:
 > recommended. The tool recommends the rank-1 eligible, conformant option; a
 > **human awards** (in the system of record).
 
-This is **demonstrated, not ratified.** The original reference scorer + demo that
-showed it were **retired** with the advisory reframe (see `retired/`); they will
-be rebuilt against this spec. The claim graduates to a ratified `OPS-R-08` only if
-a second consumer needs the scorer — letting the invariant earn its place
-(root §4/§5).
+This is **demonstrated, not ratified.** A reference recommender lives in
+`lib/operations.ts` (`recommendAward`) and the claim is asserted by
+`scripts/operations.selftest.ts` (a non-conformant quote is never recommended; the
+rank-1 eligible conformant quote is; every award is a *proposal*, never executed).
+It graduates to a ratified `OPS-R-08` only if a second consumer needs the scorer —
+letting the invariant earn its place (root §4/§5).
 
 ## Solution Eval — how we verify the invariants hold
 
@@ -113,10 +114,11 @@ a second consumer needs the scorer — letting the invariant earn its place
 - **How it's checked** — mirror-fidelity and recommend-only assertions, a
   three-way-match recommendation test, and a scenario eval for outreach and
   exception handling.
-- **Gate** — *to be rebuilt.* The former `scripts/operations.selftest.ts`
-  asserted the retired executing-OPS invariants and was moved to `retired/`; a new
-  gate matching this advisory spec (recommend-only, mirror-fidelity, no write-back)
-  is owed before `OPS` counts as built again.
+- **Gate** — `scripts/operations.selftest.ts` (`npm run operations:selftest`) —
+  **rebuilt to the advisory spec and green.** Implemented in `lib/operations.ts`
+  (mirror ingest, three-way-match *recommendation*, outreach, exceptions,
+  performance, conformance-bounded award). It asserts recommend-only, mirror
+  fidelity, and no write-back — and there is deliberately no PO/pay/execute path.
 
 ## Boundary Eval — accidental complexity a solution induces
 

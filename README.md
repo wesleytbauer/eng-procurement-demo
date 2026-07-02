@@ -61,20 +61,26 @@ npm run typecheck
 
 | Gate | Command | Expect |
 |---|---|---|
+| Standard Sourcing | `npm run sourcing:selftest` | `selftest PASS` |
 | Product Standard | `npm run standard:selftest` | `selftest PASS` |
 | Vendor Catalog | `npm run catalog:selftest` | `selftest PASS` |
+| Part Identity | `npm run selection:selftest` | `selftest PASS` |
 | Supplier Truth | `npm run supplier:selftest` | `selftest PASS` |
-| All + typecheck | `npm run verify` | `ALL GATES PASS — 3/3` |
+| Procurement Operations | `npm run operations:selftest` | `selftest PASS` |
+| All + typecheck | `npm run verify` | `ALL GATES PASS — 6/6` |
 
-> `SRC` is doctrine-only (its gate + codifier are envisioned). The `OPS` gate and
-> the end-to-end demo were **retired** with the advisory reframe and will be
-> rebuilt to the new spec — see [`retired/`](./retired/) and
+> All six domain gates are green. One caveat: `SRC`'s gate verifies the
+> *deterministic* half of its trust model (provenance, faithfulness, typing,
+> obligation, ratification, scope→set); the LLM **codifier** that produces
+> proposals is still **envisioned**. The end-to-end *showcase demo* is **retired**
+> pending a deliberate rebuild — see [`retired/`](./retired/) and
 > [`STATE.md`](./STATE.md).
 
 ## Layout
 
 `constitutions/` doctrine · `docs/` template + the MIL-STD-810 codification
-example + the end-to-end workflow · `lib/` the live domains (STD, CAT, SUP) +
-provenance/check primitives · `scripts/` one Solution-Eval gate per live domain
-plus `verify-all` · `retired/` the superseded demo, presentation, and
-executing-OPS code, frozen pending a rebuild.
+example + the workflow + the PCID-minting note · `lib/` the six domains
+(`sourcing`, `standard`, `catalog`, `part-identity`, `supplier`, `operations`) +
+provenance/check primitives · `scripts/` one Solution-Eval gate per domain plus
+`verify-all` · `retired/` the superseded demo, presentation, and executing-OPS
+code, frozen pending a rebuild.

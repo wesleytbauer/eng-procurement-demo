@@ -5,20 +5,24 @@
 //   npx tsx scripts/verify-all.ts   (or: npm run verify)
 
 import { pathToFileURL } from "node:url";
+import { selftest as sourcing } from "./sourcing.selftest.js";
 import { selftest as standard } from "./standard.selftest.js";
 import { selftest as catalog } from "./catalog.selftest.js";
+import { selftest as partIdentity } from "./selection.selftest.js";
 import { selftest as supplier } from "./supplier.selftest.js";
+import { selftest as operations } from "./operations.selftest.js";
 
-// Note: the Procurement Operations (OPS) gate and the end-to-end demo were
-// RETIRED (see retired/ and STATE.md) when OPS was reframed from an executing
-// procure-to-pay engine to an advisory layer. Their old implementations asserted
-// the retired invariants (stager≠executor, three-way-match-gates-payment), so
-// keeping them green would misrepresent the doctrine. They will be rebuilt to the
-// advisory OPS spec. Until then, verify covers the three still-valid domains.
+// The six domain gates, in flow order (SUP underneath). SRC's gate verifies the
+// *deterministic* half of its trust model — the LLM proposer is the envisioned
+// build, not gated here. OPS is the advisory rebuild (recommend-only), replacing
+// the retired executing-OPS gate (see retired/).
 const domains: Array<[string, () => number]> = [
+  ["Standard Sourcing (SRC)", sourcing],
   ["Product Standard (STD)", standard],
   ["Vendor Catalog (CAT)", catalog],
+  ["Part Identity (PID)", partIdentity],
   ["Supplier Truth (SUP)", supplier],
+  ["Procurement Operations (OPS)", operations],
 ];
 
 function main(): number {
