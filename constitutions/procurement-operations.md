@@ -86,11 +86,10 @@ in prose and *demonstrating* before carving it into the Spec:
 > recommended. The tool recommends the rank-1 eligible, conformant option; a
 > **human awards** (in the system of record).
 
-This is **demonstrated, not ratified.** The reference scorer lives in the demo
-layer (`demo/lib/award.ts`) and the claim is asserted empirically by
-`demo/demo.selftest.ts` (every *recommended* award is the rank-1 *eligible,
-conformant* quote). It graduates to a ratified `OPS-R-08` + `lib/operations.ts`
-only if a second consumer needs the scorer — letting the invariant earn its place
+This is **demonstrated, not ratified.** The original reference scorer + demo that
+showed it were **retired** with the advisory reframe (see `retired/`); they will
+be rebuilt against this spec. The claim graduates to a ratified `OPS-R-08` only if
+a second consumer needs the scorer — letting the invariant earn its place
 (root §4/§5).
 
 ## Solution Eval — how we verify the invariants hold
@@ -114,7 +113,10 @@ only if a second consumer needs the scorer — letting the invariant earn its pl
 - **How it's checked** — mirror-fidelity and recommend-only assertions, a
   three-way-match recommendation test, and a scenario eval for outreach and
   exception handling.
-- **Gate** — `scripts/operations.selftest.ts` (`npm run operations:selftest`).
+- **Gate** — *to be rebuilt.* The former `scripts/operations.selftest.ts`
+  asserted the retired executing-OPS invariants and was moved to `retired/`; a new
+  gate matching this advisory spec (recommend-only, mirror-fidelity, no write-back)
+  is owed before `OPS` counts as built again.
 
 ## Boundary Eval — accidental complexity a solution induces
 

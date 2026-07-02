@@ -8,15 +8,17 @@ import { pathToFileURL } from "node:url";
 import { selftest as standard } from "./standard.selftest.js";
 import { selftest as catalog } from "./catalog.selftest.js";
 import { selftest as supplier } from "./supplier.selftest.js";
-import { selftest as operations } from "./operations.selftest.js";
-import { selftest as demo } from "../demo/demo.selftest.js";
 
+// Note: the Procurement Operations (OPS) gate and the end-to-end demo were
+// RETIRED (see retired/ and STATE.md) when OPS was reframed from an executing
+// procure-to-pay engine to an advisory layer. Their old implementations asserted
+// the retired invariants (stager≠executor, three-way-match-gates-payment), so
+// keeping them green would misrepresent the doctrine. They will be rebuilt to the
+// advisory OPS spec. Until then, verify covers the three still-valid domains.
 const domains: Array<[string, () => number]> = [
   ["Product Standard (STD)", standard],
   ["Vendor Catalog (CAT)", catalog],
   ["Supplier Truth (SUP)", supplier],
-  ["Procurement Operations (OPS)", operations],
-  ["Synthetic demo (end-to-end)", demo],
 ];
 
 function main(): number {

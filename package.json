@@ -7,10 +7,6 @@
     "standard:selftest": "tsx scripts/standard.selftest.ts",
     "catalog:selftest": "tsx scripts/catalog.selftest.ts",
     "supplier:selftest": "tsx scripts/supplier.selftest.ts",
-    "operations:selftest": "tsx scripts/operations.selftest.ts",
-    "demo": "tsx demo/scenario.ts",
-    "demo:selftest": "tsx demo/demo.selftest.ts",
-    "video": "node demo/video/render.mjs",
     "verify": "tsx scripts/verify-all.ts",
     "typecheck": "tsc --noEmit"
   },

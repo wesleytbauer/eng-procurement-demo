@@ -128,8 +128,9 @@ is nothing to stage or gate — reversibility is upheld by abstention.
 A scope change (or a re-ratified rule) flows **SRC → STD → CAT → OPS**, and the
 transition writes a **replayable impact record** (`SRC-R-07`): standards
 added/dropped, elements changed (with obligation level), catalog entries flipped,
-new gaps, and in-flight POs at risk. The demo computes exactly this for one change
-(`demo/out/reconcile.md`: 6 newly non-conformant, 1 gap, 2 POs at risk). Because
+new gaps, and in-flight POs at risk. The (now-retired) demo showed exactly this
+for one change (6 newly non-conformant, 1 gap, 2 POs at risk); it will be
+re-demonstrated in the demo rebuild. Because
 every state is a deterministic function of `(scope version, ratified inputs)`, any
 past state is re-derivable and any two versions diffable — history is *reproducible*,
 not merely logged.

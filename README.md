@@ -31,47 +31,22 @@ It is its own git repository, nested inside `personal-claude-os-v2` for now and
 **destined to split out**. It depends on nothing in the parent repo.
 
 Start with [`CONSTITUTION.md`](./CONSTITUTION.md) (framework + the flow + the
-4-domain map), then [`STATE.md`](./STATE.md) (where things stand), then the
-domain constitutions under [`constitutions/`](./constitutions/).
+domain map — SRC, STD, CAT, SUP, OPS), then [`STATE.md`](./STATE.md) (where things
+stand), then the domain constitutions under [`constitutions/`](./constitutions/).
 
 The doctrine rule, never violated: **one thin constitution per essential
 complexity; Spec → Solution Eval → Boundary Eval; eliminate > outsource/reuse >
 build.** Constitutions hold invariants only — never mechanism.
 
-## Live demo — the framework applied end to end
+## Live demo — being rebuilt
 
-A fully synthetic, fully deterministic worked example: a 7-part sealed DC
-gearmotor (`cyberdyne-gm`), 120 units across a quarter, 12 suppliers.
-
-```
-npm install && npm run demo
-```
-
-regenerates every artifact in [`demo/out/`](./demo/out/) and the walkthrough in
-[`presentation/STORY.md`](./presentation/STORY.md) — the tables there are the
-program's output, not slides. The headline moment: engineering tightens two
-requirements (ingress floor IP54→IP65, drop 12V) and the system names, exactly,
-what breaks —
-
-| | |
-|---|---|
-| Catalog entries newly non-conformant | **6** |
-| New sourcing gaps | **1** (controller) |
-| In-flight POs at risk | **2** |
-
-…and re-awards the affected slots automatically. See
-[`demo/out/reconcile.md`](./demo/out/reconcile.md),
-[`demo/out/scorecards.md`](./demo/out/scorecards.md), and the ready-to-post
-write-ups in [`presentation/`](./presentation/).
-
-There's also a **~77-second animated walkthrough**
-([`presentation/demo-walkthrough.mp4`](./presentation/demo-walkthrough.mp4), regenerated
-by `npm run video`) — every figure on screen is real output from the demo. See
-[`presentation/VIDEO.md`](./presentation/VIDEO.md).
-
-The supplier-award scorer lives in `demo/lib/` on purpose — it is *mechanism*, so
-it is demonstrated as a **candidate** invariant (see
-`constitutions/procurement-operations.md`), not carved into the doctrine.
+> **The original showcase demo has been retired** (see [`retired/`](./retired/)).
+> It was built for an earlier version of the doctrine — before `SRC`, and while
+> `OPS` still *executed* procure-to-pay (staging/firing POs, gating payments).
+> `OPS` is now an **advisory** layer (recommends, never acts). Rather than ship a
+> demo that contradicts the doctrine, it is being **rebuilt from scratch,
+> deliberately**, against the current framework. The end-to-end flow meanwhile is
+> drawn and narrated in [`docs/workflow.md`](./docs/workflow.md).
 
 ## Offline gates
 
@@ -80,7 +55,7 @@ green is the bar. From this directory:
 
 ```
 npm install      # dev-only: tsx, typescript, @types/node
-npm run verify   # runs all four domain gates + reports
+npm run verify   # runs the live domain gates + reports
 npm run typecheck
 ```
 
@@ -89,14 +64,17 @@ npm run typecheck
 | Product Standard | `npm run standard:selftest` | `selftest PASS` |
 | Vendor Catalog | `npm run catalog:selftest` | `selftest PASS` |
 | Supplier Truth | `npm run supplier:selftest` | `selftest PASS` |
-| Procurement Operations | `npm run operations:selftest` | `selftest PASS` |
-| Synthetic demo (end-to-end) | `npm run demo:selftest` | `selftest PASS` |
-| All + typecheck | `npm run verify` | `ALL GATES PASS — 5/5` |
+| All + typecheck | `npm run verify` | `ALL GATES PASS — 3/3` |
+
+> `SRC` is doctrine-only (its gate + codifier are envisioned). The `OPS` gate and
+> the end-to-end demo were **retired** with the advisory reframe and will be
+> rebuilt to the new spec — see [`retired/`](./retired/) and
+> [`STATE.md`](./STATE.md).
 
 ## Layout
 
-`constitutions/` doctrine · `docs/` template · `lib/` the four domains +
-provenance/check primitives · `scripts/` one Solution-Eval gate per domain plus
-`verify-all` · `demo/` the synthetic GM-Series world + the end-to-end run
-(`demo/data` fixtures, `demo/lib` award/timeline/report, `demo/out` artifacts) ·
-`presentation/` the generated STORY + ready-to-post LinkedIn/X copy.
+`constitutions/` doctrine · `docs/` template + the MIL-STD-810 codification
+example + the end-to-end workflow · `lib/` the live domains (STD, CAT, SUP) +
+provenance/check primitives · `scripts/` one Solution-Eval gate per live domain
+plus `verify-all` · `retired/` the superseded demo, presentation, and
+executing-OPS code, frozen pending a rebuild.

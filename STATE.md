@@ -7,10 +7,12 @@ Phase tracker for this standalone doctrine layer.
 - **Doctrine:** complete. Root framework + 5 domain constitutions, all thin
   (Spec → Solution Eval → Boundary Eval), zero mechanism. `SRC` (Standard
   Sourcing) is the newest, the new head of the flow above `STD`.
-- **Build:** the four downstream domains (`STD`, `CAT`, `SUP`, `OPS`) are
-  implemented behind their invariants, each with its Solution Eval as a runnable
-  offline gate. `npm run verify` → **ALL GATES PASS — 5/5 green** (4 domains +
-  the end-to-end demo). `tsc --noEmit` clean. `SRC` is **doctrine-only for now**:
+- **Build:** three domains (`STD`, `CAT`, `SUP`) are implemented behind their
+  invariants, each with its Solution Eval as a runnable offline gate.
+  `npm run verify` → **ALL GATES PASS — 3/3 green**. `tsc --noEmit` clean. The
+  `OPS` implementation + gate and the end-to-end demo were **retired** (see
+  `retired/` and below) when `OPS` was reframed to an advisory layer; they will be
+  rebuilt to the new spec. `SRC` is **doctrine-only for now**:
   its Solution Eval bar is written (`scripts/sourcing.selftest.ts`), but the LLM
   codifier that would satisfy it is **envisioned, not built** — a later
   Boundary-Eval build. `SRC` carries seven invariants: `SRC-R-01..05` (scope→set,
@@ -24,20 +26,15 @@ Phase tracker for this standalone doctrine layer.
   selection that binds a part to its constraints (scope-version provenance) — so
   demand can arrive in any form (BOM/ERP/CSV/API); the form is a Boundary-Eval
   reuse call, carried as a referenced line, not yet its own domain (root §5).
-- **Showcase demo:** `demo/` applies the whole framework to a synthetic 7-slot DC
-  gearmotor (`cyberdyne-gm`), 120 units / quarter, 12 suppliers. `npm run demo`
-  emits byte-stable artifacts to `demo/out/` + a generated `presentation/STORY.md`;
-  `npm run demo:selftest` asserts the narrative (coverage green, identity resolves,
-  awards are conformant rank-1, the closed loop flips an award, no unmatched
-  payment, and the v1→v2 change is exactly 6 invalid / 1 gap / 2 POs at risk).
-  The award scorer is demo-layer mechanism (candidate, unratified `OPS` invariant).
-  Ready-to-post LinkedIn + X copy in `presentation/`.
-  **Note (doctrine ahead of demo):** `OPS` doctrine was reframed to an *advisory*
-  layer — it recommends over a read-only mirror of the system of record and never
-  performs POs/payments (`OPS-R-02/-R-03`). The showcase demo still *simulates* the
-  full ecosystem including the system-of-record's acts (it carries an advisory
-  disclaimer in `STORY.md`); re-skinning the demo's lifecycle so those transitions
-  read explicitly as *observed-from-the-SoR* is a follow-up, not yet done.
+- **Showcase demo:** **retired, pending a deliberate rebuild.** The original
+  synthetic GM-Series demo + presentation (and the executing-`OPS` code it leaned
+  on) were built for an earlier doctrine — before `SRC`, and while `OPS` still
+  *executed* procure-to-pay (staging/firing POs, gating payments). `OPS` is now an
+  *advisory* layer (recommends over a read-only mirror; never acts —
+  `OPS-R-02/-R-03/-R-04`). Rather than keep a demo that contradicts the doctrine,
+  it was moved to `retired/` (see `retired/README.md`) to be rebuilt from scratch
+  against the current framework. The end-to-end flow meanwhile is drawn + narrated
+  in `docs/workflow.md`.
 - **Standalone:** own nested git repo, own `package.json`/`tsconfig`, deps are
   dev-only (`tsx`, `typescript`, `@types/node`) — no runtime dependency on the
   parent `personal-claude-os-v2`. Parent `.gitignore` excludes this directory so
@@ -54,9 +51,9 @@ Phase tracker for this standalone doctrine layer.
 | Product Standard | `STD` | built | `npm run standard:selftest` |
 | Vendor Catalog | `CAT` | built — **flagged** as possible seam, not yet proven a domain | `npm run catalog:selftest` |
 | Supplier Truth | `SUP` | built | `npm run supplier:selftest` |
-| Procurement Operations | `OPS` | built | `npm run operations:selftest` |
+| Procurement Operations | `OPS` | doctrine reframed to *advisory*; impl + gate **retired**, to be rebuilt | *(retired — see `retired/`)* |
 
-All four, plus typecheck, run from `npm run verify`.
+The three built domains, plus typecheck, run from `npm run verify` (3/3).
 
 ## Open decisions (by evidence, not now)
 
