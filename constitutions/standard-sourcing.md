@@ -66,6 +66,22 @@ consumes as given.
   deltas the change induces. Because every state is a deterministic function of
   `(scope version, ratified inputs)`, any past state is re-derivable and any two
   versions are diffable — history is *reproducible*, not merely logged.
+- `SRC-R-08` — **Semantic fidelity is independently verified — flagged, never
+  self-attested.** Beyond the set-level, two-way faithfulness of `SRC-R-04`, every
+  codified element's *meaning* must be checked against the exact source clause it
+  cites (`SRC-R-02`) by a verifier **independent of whatever produced it** — a
+  separate judgment, not the proposer confirming its own output. The check is
+  **flag-only**: a discrepancy blocks the element or surfaces it for a human, but a
+  *pass never makes an element faithful*. Human ratification (`SRC-R-03`) remains
+  the sole authority that admits an element to `STD`; this check raises the floor
+  beneath that judgment, it does not replace it — a proposer and a verifier that
+  agree are still the system's own say-so, not ground truth. The check's verdict
+  carries weight **only after it has demonstrably discriminated** known-faithful
+  from known-unfaithful codifications on an owner-validated set; an uncalibrated
+  verifier flags nothing that counts. Wherever possible the check yields
+  **inspectable evidence** — the deterministic element read back into prose and set
+  beside the clause — so the human ratifies against a *visible divergence*, not a
+  black-box verdict.
 
 ## Solution Eval — how we verify the invariants hold
 
@@ -91,6 +107,15 @@ an LLM happens to emit.
     waiver*, never a silent pass or a hard fail; informative text gates nothing
     (SRC-R-06) — assertion, plus a gold-set check that source modal words map to
     the expected strength.
+  - **Semantic fidelity (independent, calibrated, flag-only).** On owner-validated
+    pairs — a clause with a *faithful* codification and the same clause with a
+    *deliberately unfaithful* one (e.g. `IP65` tightened to `IP67`, a guard dropped,
+    an obligation flipped) — the independent semantic check flags the unfaithful and
+    passes the faithful (SRC-R-08) — **calibration assertion**: a checker that fails
+    to separate the pair is untrusted and its flags do not gate. Its *pass* never
+    sets `ratified` (only a human does, SRC-R-03) — assertion. Where the check emits
+    discriminating test parts, the deterministic element is *run* against them, so
+    "faithful" is a checked classification, not an opinion — assertion.
   - **Scope lineage & impact.** Scope history is append-only (no in-place edit);
     every artifact resolves to exactly one scope version; a simulated scope
     transition produces an impact record whose deltas equal the expected set, and
@@ -116,6 +141,7 @@ an LLM happens to emit.
 | Scope / standard-set storage **and version history** | **Reuse** | A git-like log, an event store, or a temporal DB all satisfy `SRC-R-07`; the invariant is immutability + traceability + replayable impact, not the bytes. The derivation and the provenance are the value. |
 | The LLM codifier (prose → proposed elements) | **Build-vs-reuse variable (accidental)** | *How* prose is turned into proposals is mechanism — which model, which prompt, build vs. an off-the-shelf extractor is a recorded Boundary Eval call, **not** a Spec line. This mirrors how `SUP` treats build-vs-integrate the system of record: the variability is isolated below the invariants, which only require that whatever proposes is verified and ratified before it binds (SRC-R-03). |
 | The deterministic verify gate | **Build** (minimal) | Core to `SRC-R-03`; it is what makes an LLM proposal trustworthy enough to hand a human. |
+| The independent semantic checker (prose ↔ code fidelity) | **Build-vs-reuse variable (accidental)** | *How* fidelity is judged — an LLM back-translating the deterministic element to prose, an LLM generating discriminating test parts, or a second human reviewer — is mechanism. The invariant only requires the check be independent of the proposer, flag-only, human-anchored, and calibrated (`SRC-R-08`); which judge realizes it is a recorded Boundary Eval call, **not** a Spec line — mirroring how the *proposer* itself is treated above. Adding a fallible judge to the verify path is why it is confined to *flagging* and gold-calibrated: it lowers the odds a mistranslation reaches the human, it never certifies one didn't. |
 
 ## Seams
 

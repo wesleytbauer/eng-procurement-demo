@@ -16,11 +16,14 @@ Phase tracker for this standalone doctrine layer.
   (provenance, faithfulness, typing, obligation, ratification, scope→set); the LLM
   **codifier** that produces proposals is still **envisioned, not built** — a
   Boundary-Eval build. The end-to-end *showcase demo* remains **retired** (see
-  `retired/`), to be rebuilt from a proof that the domains work. `SRC` carries seven invariants: `SRC-R-01..05` (scope→set,
+  `retired/`), to be rebuilt from a proof that the domains work. `SRC` carries eight invariants: `SRC-R-01..05` (scope→set,
   provenance, ratification, two-way faithfulness, first-class relationships) plus
   `SRC-R-06` (obligation level — shall/should/may/informative, making `STD`'s
-  verdict three-valued) and `SRC-R-07` (versioned immutable scope + replayable
-  impact record). A concrete, hand-worked illustration of the `SRC` step on a real
+  verdict three-valued), `SRC-R-07` (versioned immutable scope + replayable
+  impact record), and `SRC-R-08` (semantic fidelity independently verified —
+  flagged, never self-attested; the independent prose↔code checker is **envisioned**,
+  like the LLM codifier, and calibrated against owner-validated pairs before its
+  flags gate). A concrete, hand-worked illustration of the `SRC` step on a real
   public-domain standard lives in `docs/mil-std-810-codification.md`, and the
   end-to-end flow is drawn + narrated in `docs/workflow.md`. Demand is keyed on a
   **Part Constraint ID (PCID)**, owned by its own thin domain **`PID` (Part
